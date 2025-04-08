@@ -1,6 +1,6 @@
 
 CREATE TABLE Staff (
-    staffID INT PRIMARY KEY,
+    staffID INT AUTO_INCREMENT PRIMARY KEY,
     passwd VARCHAR(20)
 );
 
