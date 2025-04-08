@@ -1,3 +1,9 @@
+
+CREATE TABLE Staff (
+    staffID INT PRIMARY KEY,
+    passwd VARCHAR(20)
+);
+
 -- as orders are paid this table will be updated to release old IDs
 
 CREATE TABLE Users (
