@@ -1,7 +1,9 @@
+-- table for store staff, depending on staffType DB views will change: A - admin, R - receving desk, F - fulfillment 
 
 CREATE TABLE Staff (
     staffID INT AUTO_INCREMENT PRIMARY KEY,
-    passwd VARCHAR(20)
+    passwd VARCHAR(20),
+    staffType CHAR(1)
 );
 
 -- as orders are paid this table will be updated to release old IDs
