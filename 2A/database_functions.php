@@ -51,6 +51,41 @@ function insertDatabaseValue($pdo, $statement)
     }
 }
 
+//updateDatabaseValue() - updates an entry to a database table
+//inputs -
+    //$pdo - the connected database to query
+    //$statement - a prepared SQL UPDATE statement
+//output - none, returns error message on update fail
+function updateDatabaseValue($pdo, $statement)
+{
+    try
+    {
+        $pdo->query($statement);
+    }
+    catch(PDOException $error)
+    {
+        echo "ERROR: " . $error->getMessage();
+    }
+}
+
+//extractSingleValue() - for SQL queries looking for a single value, returns the value
+//inputs -
+    //$rs - the array of queried content(s) before separation by row
+//output - value contained within the query
+function extractSingleValue($rs)
+{
+    while($row = $rs->fetch(PDO::FETCH_ASSOC))
+    { 
+        foreach($row as $key=>$value)
+        {
+            return $value;
+        }
+    }
+
+    echo "ERROR: Failed to extract value";
+    return null;
+}
+
 //debugPrintRows() - for debugging, will print all rows from a SQL query array
 //inputs -
     //$rs - the array of queried content(s) before separation by row
@@ -109,11 +144,5 @@ function loadLegacyProducts($currentDB, $legacyDB)
     }
 
     echo "<br>Successfully added " . $newEntries . " based on " . $existingEntries . " existing entries.</br>";
-}
-
-//printCart() - prints a table of a user's current cart
-function printCart($rs)
-{
-    //still implementing
 }
 ?>
