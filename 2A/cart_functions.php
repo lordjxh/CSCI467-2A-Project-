@@ -1,4 +1,6 @@
 <?php
+$subtotal = 0; //variable to hold the subtotal of the cart
+
 //printCart() - prints a table of a user's current cart by extracting data from the current and legacy databases
 //inputs -
     //$rs - the array of queried content(s) before separation by row
@@ -7,7 +9,8 @@
 //output - HTML table of a user's shopping cart
 function printCart($rs, $database, $legacyDB)
 {
-    $subtotal = 0; //variable to hold the subtotal of the cart
+    global $subtotal;
+    $subtotal = 0; //reset subtotal to prevent unwanted values
 
     echo "<table>";
     echo "<tr><td></td><td></td><td>Quantity</td><td>Price</td></tr>";
@@ -50,6 +53,12 @@ function printCart($rs, $database, $legacyDB)
     //output subtotal, then close table
     echo "<tr><td/><td/><td/><td>" . $subtotal . "</td></tr>";
     echo "</table>";
+}
+
+function getSubtotal()
+{
+    global $subtotal;
+    return $subtotal;
 }
 
 //cartQuantity() - handles the quantity of an item in the cart
