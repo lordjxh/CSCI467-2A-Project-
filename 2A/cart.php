@@ -52,5 +52,9 @@
             //Website's footers
 
         ?>
+
+        <a href="checkout.php">
+            <button>Checkout</button>
+        </a>
     </body>
 </html>
