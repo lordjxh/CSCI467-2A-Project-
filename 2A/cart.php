@@ -42,7 +42,8 @@
             {
                 $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $userID . ";";
                 $rs = getSQL($database, $cartQuery);
-                printCart($rs, $database, $legacyDB);
+                $output = getCartContents($rs, $database, $legacyDB);
+                printCart($output, true);
             }
             else //otherwise the cart is empty
             {
