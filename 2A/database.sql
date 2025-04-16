@@ -12,7 +12,7 @@ CREATE TABLE UserAccount (
     shippingAddress VARCHAR(30),
     state VARCHAR(2),
     zipcode INT,
-    phone INT,
+    phone VARCHAR(10),
     email VARCHAR(30),
     userPassword VARCHAR(30)
 ) AUTO_INCREMENT = 10001;
@@ -32,7 +32,7 @@ CREATE TABLE PaymentData (
 --Products - contains information about products being sold. Also stores inventory information.
 -- connection to LegacyDB will done programmatically, and store the legacyID for cross-reference
 CREATE TABLE Products (
-    productID INT PRIMARY KEY,
+    productID INT AUTO_INCREMENT PRIMARY KEY,
     storeQuantity INT, -- online count seen to users, updates after a successful checkout
     warehouseQuantity INT, -- actual count of item in hand, updates from WarehouseDB changes
     legacyID INT -- productID != legacyID, there are gaps
@@ -40,7 +40,7 @@ CREATE TABLE Products (
 
 --CustomerCart - as users shop, this table will store the cart contents
 CREATE TABLE CustomerCart (
-    cartID INT PRIMARY KEY,
+    cartID INT AUTO_INCREMENT PRIMARY KEY,
     productID INT,
     userID INT,
     userAccID INT,
