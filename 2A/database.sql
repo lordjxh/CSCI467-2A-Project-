@@ -51,17 +51,32 @@ CREATE TABLE CustomerCart (
     FOREIGN KEY (userAccID) REFERENCES UserAccount(userID)
 );
 
---InvoiceDB - stores all invoices for orders following checkout
+--InvoiceDB - stores all invoices for orders following checkout. Additionally if a user has
+--an account, creates a foreign key reference to the account for easier lookup
 CREATE TABLE InvoiceDB (
     invoiceNO INT AUTO_INCREMENT PRIMARY KEY,
+    userID INT,
     subtotal DOUBLE,
     shippingCost DOUBLE,
     grandTotal DOUBLE,
     datePaid DATETIME,
     authorizationNO INT,
     fulfillmentStatus CHAR(1),
-    shippingFlag CHAR(1)
+    shippingFlag CHAR(1),
+
+    FOREIGN KEY (userID) REFERENCES UserAccount(userID)
 ) AUTO_INCREMENT = 10001;
+
+--Purchases - separates from CustomerCart, when a purchase is made, moves and assigns all cart items to the invoiceNO
+CREATE TABLE Purchases (
+    purchaseID INT PRIMARY KEY,
+    invoiceNO INT,
+    productID INT,
+    quantity INT,
+
+    FOREIGN KEY (invoiceNO) REFERENCES InvoiceDB(invoiceNO),
+    FOREIGN KEY (productID) REFERENCES Products(productID)
+);
 
 --ShippingInfo - holds information regarding shipping details for an invoice
 CREATE TABLE ShippingInfo (
