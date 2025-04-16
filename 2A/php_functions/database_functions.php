@@ -132,7 +132,7 @@ function loadLegacyProducts($currentDB, $legacyDB)
 
             if(!$row2) //add if it does not exist
             {
-                $entry = "INSERT INTO Products (quantity, legacyID) VALUES (0, " . $value . ");";
+                $entry = "INSERT INTO Products (storeQuantity, warehouseQuantity, legacyID) VALUES (0, 0, " . $value . ");";
                 insertDatabaseValue($currentDB, $entry);
                 $newEntries++;
             }

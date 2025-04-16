@@ -108,7 +108,7 @@ function getCartContents($rs, $database, $legacyDB)
 //isValidQuantity() - handles the quantity of an item in the cart
 function isValidQuantity($database, $productID, $cartQuantity)
 {
-    $statement = "SELECT quantity FROM Products WHERE legacyID = " . $productID . ";";
+    $statement = "SELECT storeQuantity FROM Products WHERE legacyID = " . $productID . ";";
     $rs = getSQL($database, $statement);
     $inventoryQuantity = extractSingleValue($rs);
 

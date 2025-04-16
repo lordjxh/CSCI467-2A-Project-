@@ -33,11 +33,16 @@ function validateCC() {
     echo($result);
 }
 
-function validateCheckout($database)
+function validateCheckout()
 {
     global $vendor, $trans, $cc, $name, $exp, $amount;
 
-    //if a transaction was not generated, insert
+    //create a random transaction number
+    $trans_sec1 = rand(1000, 9999);
+    $trans_sec2 = rand(1000, 9999);
+    $trans_sec3 = rand(1000, 9999);
+
+    $trans = $trans_sec1 . "-" . $trans_sec2 . "-" . $trans_sec3;
 
     //DEBUG - confirm no values are blank before proceeding with credit card validation
     echo "Check these variables:";
@@ -49,5 +54,11 @@ function validateCheckout($database)
     echo $amount;
 
     return false;
+}
+
+function getTransactionNO()
+{
+    global $trans;
+    return $trans;
 }
 ?>
