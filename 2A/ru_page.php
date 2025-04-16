@@ -4,9 +4,9 @@ session_start();
 //include "database_calls.php"
 
 // --- DB Connection and Logic ---
-// $dsn = "mysql:host=localhost;dbname=your_database_name";
-// $username = "your_db_user";
-// $password = "your_db_password";
+// $dsn = "";
+// $username = "";
+// $password = "";
 // $pdo = establishDB($dsn, $username, $password);
 
 //missing logic to retreve userID from signon page and DB login
