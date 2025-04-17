@@ -7,14 +7,15 @@ CREATE TABLE Users (
 --UserAccount - for returning users, allows storing user's information
 CREATE TABLE UserAccount (
     userID INT AUTO_INCREMENT PRIMARY KEY,
-    firstName VARCHAR(25),
-    lastName VARCHAR (25),
-    shippingAddress VARCHAR(30),
+    firstName VARCHAR(32),
+    lastName VARCHAR (32),
+    shippingAddress VARCHAR(64),
+    city VARCHAR(48),
     state VARCHAR(2),
-    zipcode INT,
-    phone VARCHAR(10),
+    zipcode VARCHAR(10),
+    phone VARCHAR(12),
     email VARCHAR(30),
-    userPassword VARCHAR(30)
+    userPassword VARCHAR(32)
 ) AUTO_INCREMENT = 10001;
 
 --PaymentData - an optional table for users that wish to store their payment info for faster checkout
@@ -83,10 +84,10 @@ CREATE TABLE ShippingInfo (
     invoiceNO INT PRIMARY KEY,
     shippingFirstName VARCHAR(32),
     shippingLastName VARCHAR(32),
-    shippingAddress VARCHAR(32),
-    shippingCity VARCHAR(32),
+    shippingAddress VARCHAR(64),
+    shippingCity VARCHAR(48),
     shippingState VARCHAR(2),
-    shippingZipcode VARCHAR(9),
+    shippingZipcode VARCHAR(10),
     shippingEmail VARCHAR(32),
     shippingPhone VARCHAR(12),
 
@@ -98,10 +99,10 @@ CREATE TABLE BillingInfo (
     invoiceNO INT PRIMARY KEY,
     billingFirstName VARCHAR(32),
     billingLastName VARCHAR(32),
-    billingAddress VARCHAR(32),
-    billingCity VARCHAR(32),
+    billingAddress VARCHAR(64),
+    billingCity VARCHAR(48),
     billingState VARCHAR(2),
-    billingZipcode VARCHAR(9),
+    billingZipcode VARCHAR(10),
     billingEmail VARCHAR(32),
     billingPhone VARCHAR(12),
 
@@ -138,5 +139,5 @@ CREATE TABLE ShippingWeights (
     weightID INT AUTO_INCREMENT PRIMARY KEY,
     minimumWeight DOUBLE,
     maximumWeight DOUBLE,
-    shippingPercent DECIMAL
+    shippingPercent DOUBLE
 );
