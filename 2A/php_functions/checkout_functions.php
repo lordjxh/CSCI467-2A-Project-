@@ -1,13 +1,31 @@
 <?php
 
-function processInvoice($database)
+function processInvoice($userID, $cartItems, $database)
 {
-    $subtotal = $_POST['subtotal'];
-    $shipping = $_POST['shippingCost'];
-    $totalCost = $subtotal + $shipping;
+    global $trans;  //used in ccValidation.php
 
-    $statement = "INSERT INTO InvoiceDB(subtotal, shippingCost, grandTotal, datePaid, authorizationNO, fulfillmentStatus, shippingFlag)
-        VALUES(";
+    $subtotal = getSubtotal($cartItems);
+    $shipping = getShippingCost($cartItems, $database);
+    $totalCost = ($subtotal + $shipping);
+
+    if($userID == NULL)
+    {
+        $statement = "INSERT INTO InvoiceDB(subtotal, shippingCost, grandTotal, datePaid, authorizationNO, fulfillmentStatus, shippingFlag) VALUES(" . 
+            $subtotal . ", " . $shipping . ", " . $totalCost . ", '" . date("Y-m-d H:m:s") . "', " . $trans . ", 'N', 'N');";
+    }
+    else
+    {
+        $statement = "INSERT INTO InvoiceDB(userID, subtotal, shippingCost, grandTotal, datePaid, authorizationNO, fulfillmentStatus, shippingFlag) VALUES(" . 
+            $userID . ", " . $subtotal . ", " . $shipping . ", " . $totalCost . ", '" . date("Y-m-d H:m:s") . "', " . $trans . ", 'N', 'N');";
+    }
+
+    insertDatabaseValue($database, $statement);
+    
+    $invoiceID = $database->lastInsertID();
+    
+    echo $invoiceID;
+
+    return $invoiceID;
 }
 
 //processShipping() - takes user input and stores into the ShippingInfo table

@@ -9,7 +9,10 @@
                 
             $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
             $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
-            $userID = 10022;
+            
+            //need a way to determine if a user has an account or is a guest user
+            $_SESSION['userID'] = 10022;
+            $userID = $_SESSION['userID'];
 
             //handles changes to a cart item upon form submissions
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -47,11 +50,19 @@
                 $output = getCartContents($rs, $database, $legacyDB);
 
                 $_SESSION['cart'] = $output; //force cart contents to session variable
-                printCart($output, true);
+                
+                if($output != NULL)
+                {
+                    printCart($output, true);
+                }
+                else
+                {
+                    echo "<p>Cart Empty</p>";
+                }
             }
-            else //otherwise the cart is empty
+            else //otherwise print error, as userID failed to populate
             {
-                echo "<p>Cart Empty</p>";
+                echo "<p>ERROR: failed to assign a User ID. Please reload from the home page.</p>";
             }
 
             //Website's footers

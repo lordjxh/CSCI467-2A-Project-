@@ -10,7 +10,17 @@
     $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
     $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
+    //need a way to determine if a user has an account or is a guest user
+
     $userID = $_SESSION['userID']; //it is assumed reaching this point the user should have a valid userID...
+
+    if($_SESSION['cart'] == NULL) //if cart fails to pass, call it back again
+    {
+        $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $userID . ";";
+        $rs = getSQL($database, $cartQuery);
+        $output = getCartContents($rs, $database, $legacyDB);
+        $_SESSION['cart'] = $output;
+    }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
@@ -19,23 +29,23 @@
         //if($valid == true)
         //{
             //create invoice, retrieve invoiceID from new value inserted
-            //$invoiceID = processInvoice($database);
+            $invoiceID = processInvoice($userID, $_SESSION['cart'], $database);
 
             //process user input for order into shipping and billing info tables
-            processShipping(10001, $database);
-            processBilling(10001, $_POST['matchShipping'], $database);
+            processShipping($invoiceID, $database);
+            processBilling($invoiceID, $_POST['matchShipping'], $database);
 
             //move purchased items from CustomerCart to Purchases table, and update inventory
-            processPurchases(10022, true, 10001, $database);
+            processPurchases($userID, true, $invoiceID, $database);
 
             //if($_POST['storeCard'] == true)
             //{
                 //storeUserCard();
             //}
 
-            //navigate to process_order.php to update database with order information
-            //header("Location: processing.php");
-            //exit();
+            //navigate to checkout_confirmation upon reaching this point successfully
+            header("Location: checkout_confirmation.php");
+            exit();
         //}
     }
 ?>
@@ -127,14 +137,11 @@
 
         <!-- Cart Summary (Right Side) -->
         <?php
-            if($_SESSION['cart'] == NULL)
-            {
-                $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $userID . ";";
-                $rs = getSQL($database, $cartQuery);
-                $output = getCartContents($rs, $database, $legacyDB);
-                $_SESSION['cart'] = $output;
-            }
+            //force call totals to ensure updated values
+            getSubtotal($_SESSION['cart']);
+            getShippingCost($_SESSION['cart'], $database);
 
+            //print cart contents as summary view
             echo "<div class=\"split right\">";
             printCart($_SESSION['cart'], false);
             echo "</div>";

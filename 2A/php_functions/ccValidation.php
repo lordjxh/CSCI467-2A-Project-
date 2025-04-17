@@ -3,18 +3,19 @@
 
 $vendor = "2A-CORP";
 $trans = NULL;
+$trans_formatted = NULL;
 $cc = $_POST['cardNumber'];
 $name = $_POST['billingFirstName'] . " " . $_POST['billingLastName'];
 $exp = $_POST['cardMonth'] . "/" . $_POST['cardYear'];
 $amount = NULL;
 
 function validateCC() {
-    global $vendor, $trans, $cc, $name, $exp, $amount;
+    global $vendor, $trans_formatted, $cc, $name, $exp, $amount;
 
     $url = 'http://blitz.cs.niu.edu/CreditCard/';
     $data = array(
 	    'vendor' => $vendor,
-	    'trans' => $trans,
+	    'trans' => $trans_formatted,
 	    'cc' => $cc,
 	    'name' => $name, 
 	    'exp' => $exp, 
@@ -35,30 +36,25 @@ function validateCC() {
 
 function validateCheckout()
 {
-    global $vendor, $trans, $cc, $name, $exp, $amount;
+    global $vendor, $trans, $trans_formatted, $cc, $name, $exp, $amount;
 
     //create a random transaction number
     $trans_sec1 = rand(1000, 9999);
     $trans_sec2 = rand(1000, 9999);
-    $trans_sec3 = rand(1000, 9999);
 
-    $trans = $trans_sec1 . "-" . $trans_sec2 . "-" . $trans_sec3;
+    $trans = $trans_sec1 . $trans_sec2;
+    $trans_formatted = $trans_sec1 . "-" . $trans_sec2;
 
     //DEBUG - confirm no values are blank before proceeding with credit card validation
     echo "Check these variables:";
     echo $vendor . " ";
-    echo $trans . " ";
+    echo $trans;
+    echo $trans_formatted . " ";
     echo $cc . " ";
     echo $name . " ";
     echo $exp . " ";
     echo $amount;
 
     return false;
-}
-
-function getTransactionNO()
-{
-    global $trans;
-    return $trans;
 }
 ?>

@@ -55,7 +55,7 @@ function printCart($cartItems, $fullOutput)
     echo "</div>";
 }
 
-function printTotal($cartItems, $database)
+function printTotal($cartItems, $database) //needs revision
 {
     $subtotal = 0;
     $totalWeight = 0;
@@ -70,6 +70,7 @@ function printTotal($cartItems, $database)
 function getCartContents($rs, $database, $legacyDB)
 {
     $index = 0;
+    $output = NULL;
 
     //extract the productID from the query, then query the legacyDB for details
     while($row = $rs->fetch(PDO::FETCH_ASSOC))
@@ -120,6 +121,18 @@ function isValidQuantity($database, $productID, $cartQuantity)
     return true;
 }
 
+function getTotalWeight($cartItems)
+{
+    $totalWeight = 0;
+
+    foreach($cartItems as $item) //for each item in cart, get the weight based on quantity
+    {
+        $totalWeight += $item['weight'] * $item['quantity'];
+    }
+
+    return $totalWeight;
+}
+
 function getSubtotal($cartItems)
 {
     $subtotal = 0;
@@ -134,5 +147,24 @@ function getSubtotal($cartItems)
     }
 
     return $subtotal;
+}
+
+function getShippingCost($cartItems, $database) //note - also forces totalCost to update
+{
+    $subtotal = getSubtotal($cartItems);
+    $totalWeight = getTotalWeight($cartItems); 
+
+    $shipping = 0;
+
+    //fetch and extract the percentage amount to use
+    $statement = "SELECT shippingPercent FROM ShippingWeights WHERE " . $totalWeight . " >= minimumWeight AND " . $totalWeight . " <= maximumWeight;";
+    $rs = getSQL($database, $statement);
+
+    $percentage = extractSingleValue($rs);
+
+    $shipping = ($subtotal * $percentage);
+    $shipping = round($shipping, 2);
+
+    return $shipping;
 }
 ?>
