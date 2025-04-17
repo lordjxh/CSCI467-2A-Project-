@@ -69,7 +69,7 @@ CREATE TABLE InvoiceDB (
 
 --Purchases - separates from CustomerCart, when a purchase is made, moves and assigns all cart items to the invoiceNO
 CREATE TABLE Purchases (
-    purchaseID INT PRIMARY KEY,
+    purchaseID INT AUTO_INCREMENT PRIMARY KEY,
     invoiceNO INT,
     productID INT,
     quantity INT,
@@ -135,7 +135,7 @@ CREATE TABLE AdminDB (
 --ShippingWeights - allows admins to change shipping costs based on a weight range. Assumes a percentage
 --of the total cost of the order
 CREATE TABLE ShippingWeights (
-    weightID INT PRIMARY KEY,
+    weightID INT AUTO_INCREMENT PRIMARY KEY,
     minimumWeight DOUBLE,
     maximumWeight DOUBLE,
     shippingPercent DECIMAL
