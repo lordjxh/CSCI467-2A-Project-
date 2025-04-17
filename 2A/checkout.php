@@ -1,37 +1,53 @@
+<?php
+    include "secrets.php";
+    include "php_functions/database_functions.php";
+    include "php_functions/ccValidation.php";
+    include "php_functions/cart_functions.php";
+    include "php_functions/checkout_functions.php";
+
+    session_start();
+
+    $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
+    $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
+
+    $userID = $_SESSION['userID']; //it is assumed reaching this point the user should have a valid userID...
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST')
+    {
+        $valid = validateCheckout();
+
+        //if($valid == true)
+        //{
+            //create invoice, retrieve invoiceID from new value inserted
+            //$invoiceID = processInvoice($database);
+
+            //process user input for order into shipping and billing info tables
+            processShipping(10001, $database);
+            processBilling(10001, $_POST['matchShipping'], $database);
+
+            //move purchased items from CustomerCart to Purchases table, and update inventory
+            processPurchases(10022, true, 10001, $database);
+
+            //if($_POST['storeCard'] == true)
+            //{
+                //storeUserCard();
+            //}
+
+            //navigate to process_order.php to update database with order information
+            //header("Location: processing.php");
+            //exit();
+        //}
+    }
+?>
+
 <html>
     <head>
         <link rel="stylesheet" href="css/checkout.css">
-        <?php
-            include "database_functions.php";
-            include "secrets.php";
-            include "ccValidation.php";
-
-            $userID = 1002;
-
-            //connect to database
-            $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
-        ?>
         <script> var currentTab = 0; </script>
     </head>
     <body>
-        <!-- Submission CC Validation (Full Page) -->
-        <?php
-            if ($_SERVER['REQUEST_METHOD'] == 'POST')
-            {
-                $valid = validateCheckout($database);
-
-                if($valid)
-                {
-                    //navigate to confirmation page with transaction ID
-                }
-                else
-                {
-                    echo "<script> currentTab = 3; </script>";
-                }
-            }
-        ?>
-
         <!-- Form Entry (Left Side) -->
+        <div class="split left">
         <form id="regForm" method="post">
             <div class="tab"> <!-- Customer Info and Shipping Info -->
                 <h1>Contact & Shipping</h1>
@@ -54,8 +70,10 @@
 
             <div class="tab"> <!-- Billing Address -->
                 <h2>Billing Address</h2>
-                <p><input id="matchShipping" type="checkbox">Same as Shipping</p>
+                <p><input id="matchShipping" name="matchShipping" type="checkbox">Same as Shipping</p>
 
+                <p><input id="billingFirstName" name="billingFirstName" placeholder="First name..." value="<?php echo $_POST['billingFirstName']; ?>" oninput="this.className = ''"></p>
+                <p><input id="billingLastName" name="billingLastName" placeholder="Last name..." value="<?php echo $_POST['billingLastName']; ?>" oninput="this.className = ''"></p>
                 <p><input id="billingAddress" name="billingAddress" placeholder="Address..." value="<?php echo $_POST['billingAddress']; ?>" oninput="this.className = ''"></p>
                 <p><input id="billingCity" name="billingCity" placeholder="City..." value="<?php echo $_POST['billingCity']; ?>" oninput="this.className = ''"></p>
                 <p><input id="billingState" name="billingState" placeholder="State..." value="<?php echo $_POST['billingState']; ?>" oninput="this.className = ''"></p>
@@ -69,7 +87,6 @@
             <div class="tab"> <!-- Payment Info -->
                 <h2>Payment Info</h2>
                 <p><input id="cardNumber" name="cardNumber" placeholder="Card Number..." value="<?php echo $_POST['cardNumber']; ?>" oninput="this.className = ''"></p>
-                <p><input id="cardName" name="cardName" placeholder="Card Name..." value="<?php echo $_POST['cardName']; ?>" oninput="this.className = ''"></p>
                 <p><input id="cardMonth" name="cardMonth" placeholder="MM..." value="<?php echo $_POST['cardMonth']; ?>" oninput="this.className = ''"></p>
                 <p><input id="cardYear" name="cardYear" placeholder="YYYY..." value="<?php echo $_POST['cardYear']; ?>" oninput="this.className = ''"></p>
                 <p><input id="cardSecurity" name="cardSecurity" placeholder="Security..." value="<?php echo $_POST['cardSecurity']; ?>" oninput="this.className = ''"></p>
@@ -106,8 +123,27 @@
             </div>
 
         </form>
+        </div>
 
         <!-- Cart Summary (Right Side) -->
+        <?php
+            if($_SESSION['cart'] == NULL)
+            {
+                $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $userID . ";";
+                $rs = getSQL($database, $cartQuery);
+                $output = getCartContents($rs, $database, $legacyDB);
+                $_SESSION['cart'] = $output;
+            }
+
+            echo "<div class=\"split right\">";
+            printCart($_SESSION['cart'], false);
+            echo "</div>";
+
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            {
+                echo "<script> currentTab = 3; </script>";
+            }
+        ?>
 
         <script src="js/checkout_script.js"></script>
     </body>

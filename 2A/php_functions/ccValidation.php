@@ -4,7 +4,7 @@
 $vendor = "2A-CORP";
 $trans = NULL;
 $cc = $_POST['cardNumber'];
-$name = $_POST['cardName'];
+$name = $_POST['billingFirstName'] . " " . $_POST['billingLastName'];
 $exp = $_POST['cardMonth'] . "/" . $_POST['cardYear'];
 $amount = NULL;
 

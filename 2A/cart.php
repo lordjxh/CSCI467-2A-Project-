@@ -1,13 +1,15 @@
 <html>
     <head>
         <?php
-            include "database_functions.php";
             include "secrets.php";
-            include "cart_functions.php";
+            include "php_functions/database_functions.php";
+            include "php_functions/cart_functions.php";
+
+            session_start();
                 
             $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
             $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
-            $userID = 1002;
+            $userID = 10022;
 
             //handles changes to a cart item upon form submissions
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -43,6 +45,8 @@
                 $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $userID . ";";
                 $rs = getSQL($database, $cartQuery);
                 $output = getCartContents($rs, $database, $legacyDB);
+
+                $_SESSION['cart'] = $output; //force cart contents to session variable
                 printCart($output, true);
             }
             else //otherwise the cart is empty

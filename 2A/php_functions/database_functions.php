@@ -51,6 +51,25 @@ function insertDatabaseValue($pdo, $statement)
     }
 }
 
+//deleteDatabaseValue() - removes values from a database table
+//inputs -
+    //$pdo - the connected database to query
+    //$statement - a prepared SQL INSERT INTO statement
+//output - none, stops HTML if deletion fails
+function deleteDatabaseValue($pdo, $statement)
+{
+    try
+    {
+        $output = $pdo->prepare($statement);
+        $output->execute();
+    }
+    catch (PDOException $error) 
+    {
+        echo "ERROR: " . $error->getMessage();
+        die();
+    }
+}
+
 //updateDatabaseValue() - updates an entry to a database table
 //inputs -
     //$pdo - the connected database to query
