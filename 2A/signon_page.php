@@ -13,7 +13,7 @@
             </div>
         </header>
         <main>
-            <h2>Login</h2>
+            <h1>Login</h1>
             <!--User Login Data Entry -->
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <label for="login_email">Email:</label>
@@ -24,6 +24,9 @@
                 <br>
                 <button type="submit" name="login">Login</button>
             </form>
+
+            <a href="signup_page.php">Don't have an account? Sign up here!</a>
+            
             <?php
                 session_start();
 
