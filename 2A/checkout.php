@@ -22,11 +22,19 @@
         $_SESSION['cart'] = $output;
     }
 
+    //retrieve subtotal and shipping amounts for processing
+    $subtotal = getSubtotal($_SESSION['cart']);
+    $shipping = getShippingCost($_SESSION['cart'], $database);
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
-        $valid = validateCheckout();
+        //$valid = validateCheckout();
 
-        //if($valid == true)
+        //if(isset($valid['errors']))
+        //{
+            //$printErrors = true;
+        //}
+        //else
         //{
             //create invoice, retrieve invoiceID from new value inserted
             $invoiceID = processInvoice($userID, $_SESSION['cart'], $database);
@@ -34,15 +42,15 @@
             //process user input for order into shipping and billing info tables
             processShipping($invoiceID, $database);
             processBilling($invoiceID, $_POST['matchShipping'], $database);
-
+            
             //move purchased items from CustomerCart to Purchases table, and update inventory
             processPurchases($userID, true, $invoiceID, $database);
-
+            
             //if($_POST['storeCard'] == true)
             //{
                 //storeUserCard();
             //}
-
+            
             //navigate to checkout_confirmation upon reaching this point successfully
             header("Location: checkout_confirmation.php");
             exit();
@@ -98,7 +106,7 @@
                 <h2>Payment Info</h2>
                 <p><input id="cardNumber" name="cardNumber" placeholder="Card Number..." value="<?php echo $_POST['cardNumber']; ?>" oninput="this.className = ''"></p>
                 <p><input id="cardMonth" name="cardMonth" placeholder="MM..." value="<?php echo $_POST['cardMonth']; ?>" oninput="this.className = ''"></p>
-                <p><input id="cardYear" name="cardYear" placeholder="YYYY..." value="<?php echo $_POST['cardYear']; ?>" oninput="this.className = ''"></p>
+                <p><input id="cardYear" name="cardYear" placeholder="YY..." value="<?php echo $_POST['cardYear']; ?>" oninput="this.className = ''"></p>
                 <p><input id="cardSecurity" name="cardSecurity" placeholder="Security..." value="<?php echo $_POST['cardSecurity']; ?>" oninput="this.className = ''"></p>
             </div>
 
@@ -132,15 +140,22 @@
                 <span class="step"></span>
             </div>
 
+            <input type="hidden" id="amount" name="amount" value="<?php echo ($subtotal + $shipping); ?>"/>
         </form>
+        <?php
+            //if any errors occurred during checkout, print here
+            if($printErrors == true)
+            {
+                foreach($valid['errors'] as $error)
+                {
+                    echo "<p>" . $error . "</p>";
+                }
+            }
+        ?>
         </div>
 
         <!-- Cart Summary (Right Side) -->
         <?php
-            //force call totals to ensure updated values
-            getSubtotal($_SESSION['cart']);
-            getShippingCost($_SESSION['cart'], $database);
-
             //print cart contents as summary view
             echo "<div class=\"split right\">";
             printCart($_SESSION['cart'], $database, false);
