@@ -143,7 +143,7 @@
 
             //print cart contents as summary view
             echo "<div class=\"split right\">";
-            printCart($_SESSION['cart'], false);
+            printCart($_SESSION['cart'], $database, false);
             echo "</div>";
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')

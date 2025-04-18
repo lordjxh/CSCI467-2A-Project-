@@ -5,14 +5,14 @@
     //$currentDB - the new database that holds new attributes
     //$legacyDB - the legacy database to retrive items from
 //output - HTML table of a user's shopping cart
-function printCart($cartItems, $fullOutput)
+function printCart($cartItems, $database, $fullOutput)
 {
     echo "<div class=\"cart\">";
     echo "<table>";
 
     if($fullOutput == true)
     {
-        echo "<tr><td></td><td></td><td>Quantity</td><td>Price</td></tr>";
+        echo "<tr><td></td><td></td><td>Quantity</td><td></td><td>Price</td></tr>";
     }
 
     foreach($cartItems as $item)
@@ -21,50 +21,60 @@ function printCart($cartItems, $fullOutput)
         $pictureURL = $item['pictureURL'];
         $description = $item['description'];
         $quantity = $item['quantity'];
-        $price = $item['price'];
+        $price = ($item['price'] * $quantity);
 
-        echo "<tr>";
-        echo "<td><img src=\"" . $pictureURL . "\"></img></td>";
+        echo "<tr class=\"cart-item\" data-id=\"" . $productID . "\">";
+
+        echo "<td><img src=\"" . $pictureURL . "\" /></td>";
         echo "<td>" . $description . "</td>";
+        echo "<td>" . $quantity . "</td>";
 
-        echo "<td>" . $quantity;
-
-        if($fullOutput == true)
+        if($fullOutput == true) //handles quantity buttons
         {
+            echo "<td class=\"quantity-buttons\">";
+
             echo "<form method=\"post\">";
-            echo "<input type=\"hidden\" name=\"productID\" value=" . $productID . ">";
-            echo "<input type=\"hidden\" name=\"quantity\" value=" . $quantity . ">";
-            echo "<button type=\"submit\" name=\"decrease\">-</button>";
-            echo "<button type=\"submit\" name=\"increase\">+</button>";
-            echo "<button type=\"submit\" name=\"remove\">x</button>";
+            echo "<input type=\"hidden\" name=\" productID\" value=" . $productID . ">";
+            echo "<input type=\"hidden\" name=\" quantity\" value=" . $quantity . ">";
+            echo "<button id=\"decrease-quantity\" type=\"submit\" name=\"decrease\">-</button>";
+            echo "<button id=\"increase-quantity\" type=\"submit\" name=\"increase\">+</button>";
+            echo "<button id=\"remove-item\" type=\"submit\" name=\"remove\">x</button>";
             echo "</form>";
-    
             echo "</td>";
-            echo "<td>" . $price . "</td>";
+    
+            echo "<td>$" . $price . "</td>";
 
             if($item['inStock'] == false)
             {
                 echo "<td>" . "ITEM NOT IN STOCK" . "</td>";
             }
-
         }
+
         echo "</tr>";
     }
 
-    echo "</table>";
-    echo "</div>";
-}
+    $subtotal = getSubtotal($cartItems);
+    $shipping = getShippingCost($cartItems, $database);
+    $total = ($subtotal + $shipping);
 
-function printTotal($cartItems, $database) //needs revision
-{
-    $subtotal = 0;
-    $totalWeight = 0;
-
-    foreach($cartItems as $item)
+    //handles subtotal, shipping, and total cost, requires $database
+    if($fullOutput == true) //for cart page
     {
-        $price = $item['price'];
-        $weight = $item['weight'];
+        echo "<tr/><tr/><tr/>";
+        echo "<tr><td>Subtotal:</td><td/><td/><td/><td>$" . $subtotal . "</td></tr>";
+        echo "<tr><td>Shipping:</td><td/><td/><td/><td>$" . $shipping . "</td></tr>";
+        echo "<tr><td>Total:</td><td/><td/><td/><td>$" . $total . "</td></tr>";
     }
+    else //for order summary pages (i.e. checkout, invoice lookup)
+    {
+        echo "<tr/><tr/><tr/>";
+        echo "<tr><td>Subtotal:</td><td/><td/><td>$" . $subtotal . "</td></tr>";
+        echo "<tr><td>Shipping:</td><td/><td/><td>$" . $shipping . "</td></tr>";
+        echo "<tr><td>Total:   </td><td/><td/><td>$" . $total . "</td></tr>";
+    }
+
+    echo "</table>";
+    echo "</div>"; //div-cart
 }
 
 function getCartContents($rs, $database, $legacyDB)
@@ -149,7 +159,7 @@ function getSubtotal($cartItems)
     return $subtotal;
 }
 
-function getShippingCost($cartItems, $database) //note - also forces totalCost to update
+function getShippingCost($cartItems, $database)
 {
     $subtotal = getSubtotal($cartItems);
     $totalWeight = getTotalWeight($cartItems); 
