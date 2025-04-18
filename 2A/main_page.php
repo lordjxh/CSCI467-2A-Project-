@@ -8,7 +8,7 @@
 
     /*open a connection with our database and legacy database*/
     include "secrets.php";
-    include "database_functions.php";
+    include "php_functions/database_functions.php";
 
     $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
     $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
@@ -56,7 +56,7 @@
                             $sql = $legacyDB->prepare("SELECT * FROM parts;");
                             if(!$sql) {
 
-                                die("Error with SQL Query: " . $legacyDB->error);
+                                die("Error with SQL Query: " . $legacyDB->$error);
                             }
 
                             /*loop to display catalog items in a table*/
