@@ -1,5 +1,6 @@
 <?php
     include "secrets.php";
+    include "php_functions/user_functions.php";
     include "php_functions/database_functions.php";
     include "php_functions/cart_functions.php";
 
@@ -12,10 +13,13 @@
     if($_SESSION['userID'] == NULL)
     {
         $_SESSION['userID'] = assignUserID($database);
+        $_SESSION['logged_in'] = false;
     }
 
     //assign the session ID to a current variable (will remove later)
-    $userID = $_SESSION['userID'];
+    $userID = 10022;
+    $_SESSION['userID'] = $userID;
+    $_SESSION['logged_in'] = true;
 
     //handles changes to a cart item upon form submissions
     if ($_SERVER['REQUEST_METHOD'] == 'POST') 
@@ -41,11 +45,19 @@
     }
 
     //fetches cart contents and prints to front-end
-    $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $userID . ";";
-    $rs = getSQL($database, $cartQuery);
-    $output = getCartContents($rs, $database, $legacyDB);
+    if($_SESSION['logged_in'] == true) //if the user is logged in, query by UserAccID
+    {
+        $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $userID . ";";
+    }
+    else //else query by UserID
+    {
+        $cartQuery = "SELECT * FROM CustomerCart WHERE UserID = " . $userID . ";";
+    }
 
-    $_SESSION['cart'] = $output; //force cart contents to session variable
+    $rs = getSQL($database, $cartQuery);
+    $cartItems = getCartContents($rs, $database, $legacyDB);
+
+    $_SESSION['cart'] = $cartItems; //force cart contents to session variable
 ?>
 
 <html>
@@ -53,7 +65,7 @@
         <link rel="stylesheet" href="css/cart.css">
     </head>
     <body>
-        <p id="UserID" name="UserID" placeholder="Log In"><?php echo $userID; ?></p>
+        <p><a href="" id="UserID" name="UserID" placeholder="Log In"><?php setLogOnAttributeValue($database) ?></a></p>
         <h1>2A-CORP</h1>
         <nav>
 	        <a href=>Home</a>
@@ -68,7 +80,14 @@
                     //If a user is established, print the cart contents (if any)
                     if($userID != NULL)
                     {
-                        printCart($output, $database, true);
+                        if($cartItems != NULL)
+                        {
+                            printCart($cartItems, $database, true);
+                        }
+                        else
+                        {
+                            echo "<p>The cart is empty.</p>";
+                        }
                     }
                     else //otherwise print error, as userID failed to populate
                     {
