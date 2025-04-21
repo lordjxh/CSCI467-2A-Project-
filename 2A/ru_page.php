@@ -11,11 +11,14 @@ session_start();
 
 //missing logic to retreve userID from signon page and DB login
 
-
+$userID = $_GET['userID'] ?? $_SESSION['userID'] ?? null;
 $orderStatusMessage = "";
 $infoUpdateMessage = "";
 $paymentUpdateMessage = "";
 
+if (!$userID) {
+    die("User ID is required to access this page.");
+}
 
 // 1. Check Order Status
 if (isset($_POST['check_invoice'])) {
