@@ -164,4 +164,18 @@ function loadLegacyProducts($currentDB, $legacyDB)
 
     echo "<br>Successfully added " . $newEntries . " based on " . $existingEntries . " existing entries.</br>";
 }
+
+//assignUserID() - for guest users, will create a userID from the Users table, separate from UserAcc.
+//Inputs -
+    //$pdo - the connected database to query
+//Output - the ID of the last created User value
+function assignUserID($pdo)
+{
+    $statement = "INSERT INTO Users(creationDate) VALUES ('" . date("Y-m-d H:m:s") . "');";
+    insertDatabaseValue($pdo, $statement);
+
+    $userID = $pdo->lastInsertID();
+
+    return $userID;
+}
 ?>

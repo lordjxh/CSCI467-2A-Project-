@@ -1,7 +1,8 @@
 --Users - a table that contains temporary user ID's for single instance users.
 -- as orders are paid this table will be updated to release old IDs
 CREATE TABLE Users (
-    userID INT AUTO_INCREMENT PRIMARY KEY
+    userID INT AUTO_INCREMENT PRIMARY KEY,
+    creationDate DATETIME
 ) AUTO_INCREMENT = 101;
 
 --UserAccount - for returning users, allows storing user's information

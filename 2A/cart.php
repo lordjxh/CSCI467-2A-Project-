@@ -8,8 +8,13 @@
     $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
     $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
             
-    //need a way to determine if a user has an account or is a guest user
-    $_SESSION['userID'] = 10022;
+    //if a userID has not been assigned, call assignUserID() to create an ID
+    if($_SESSION['userID'] == NULL)
+    {
+        $_SESSION['userID'] = assignUserID($database);
+    }
+
+    //assign the session ID to a current variable (will remove later)
     $userID = $_SESSION['userID'];
 
     //handles changes to a cart item upon form submissions
@@ -48,6 +53,7 @@
         <link rel="stylesheet" href="css/cart.css">
     </head>
     <body>
+        <p id="UserID" name="UserID" placeholder="Log In"><?php echo $userID; ?></p>
         <h1>2A-CORP</h1>
         <nav>
 	        <a href=>Home</a>
