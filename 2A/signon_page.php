@@ -62,7 +62,7 @@
                         $_SESSION['logged_in'] = true;
                         $_SESSION['userID'] = $result['userID'];
 
-                        header("Location: ru_page.php");
+                        header("Location: ru_page.php?userID=" . urlencode($result['userID']));
                         exit();
                     }
                 
