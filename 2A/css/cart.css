@@ -1,7 +1,11 @@
+/* All body elements */
+
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
 }
+
+/* Navigation Bar */
 
 nav {
     background-color: #808080;
@@ -23,6 +27,13 @@ nav a:hover {
     color: black;
 }
 
+.user-message {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Main Page Dividers */
+
 .container {
     display: flex;
     flex-direction: row;
@@ -40,29 +51,70 @@ nav a:hover {
     border-radius: 8px;
 }
 
-input[type=text], input[type=email], input[type=number] {
-    width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    box-sizing: border-box;
-}
-
-input[type=submit] {
-    padding: 10px 20px;
-}
-
 h1 {
     margin-bottom: 40px;
 }
 
-.out-of-stock {
-    background-color: #ffe6e6;
+/* Table Elements */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
 }
 
-.cart-image {
-    width: 50%;
-    height: 50%;
+td, th {
+    border: none;
+    padding: 10px;
 }
+
+.invalid-item {
+    color: red;
+    background-color: #ffcccc !important;
+}
+
+.cart-header {
+    text-align: center;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.item-image {
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.item-description {
+    text-align: left;
+}
+
+.item-quantity {
+    text-align: center;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.quantity-buttons {
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.item-price {
+    text-align: right;
+}
+
+.cost-label {
+    text-align: right;
+}
+
+.cost-sum {
+    text-align: right;
+}
+
+/* Buttons */
 
 .button {
     display: inline-block;
@@ -76,5 +128,18 @@ h1 {
 }
 
 .button:hover {
+    background-color: #0056b3;
+}
+
+.quantity-button {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.quantity_button:hover {
     background-color: #0056b3;
 }

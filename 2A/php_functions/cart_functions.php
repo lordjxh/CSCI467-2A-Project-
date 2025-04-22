@@ -1,18 +1,17 @@
 <?php
 //printCart() - prints a table of a user's current cart by extracting data from the current and legacy databases
 //inputs -
-    //$rs - the array of queried content(s) before separation by row
-    //$currentDB - the new database that holds new attributes
-    //$legacyDB - the legacy database to retrive items from
+    //$cartItems - the array of items in the user's cart called from getCartContents()
+    //$database - the new database that holds new attributes
+    //$fullOutput - a boolean to tell whether to print all aspects of the cart (column headers, price by item)
 //output - HTML table of a user's shopping cart
 function printCart($cartItems, $database, $fullOutput)
 {
-    echo "<div class=\"cart\">";
-    echo "<table>";
+    echo "<table class=\"cart\">";
 
     if($fullOutput == true)
     {
-        echo "<tr><td></td><td></td><td>Quantity</td><td></td><td>Price</td></tr>";
+        echo "<tr><td></td><td></td><td class=\"cart-header\">Quantity</td><td></td><td class=\"cart-header\">Price</td></tr>";
     }
 
     foreach($cartItems as $item)
@@ -23,11 +22,18 @@ function printCart($cartItems, $database, $fullOutput)
         $quantity = $item['quantity'];
         $price = ($item['price'] * $quantity);
 
-        echo "<tr class=\"cart-item\" data-id=\"" . $productID . "\">";
+        if($item['inStock'] == true)
+        {
+            echo "<tr class=\"cart-item\" data-id=\"" . $productID . "\">";
+        }
+        else
+        {
+            echo "<tr class=\"invalid-item\" data-id=\"" . $productID . "\">";
+        }
 
-        echo "<td><img src=\"" . $pictureURL . "\" /></td>";
-        echo "<td>" . $description . "</td>";
-        echo "<td>" . $quantity . "</td>";
+        echo "<td class=\"item-image\"><img src=\"" . $pictureURL . "\" /></td>";
+        echo "<td class=\"item-description\">" . $description . "</td>";
+        echo "<td class=\"item-quantity\">" . $quantity . "</td>";
 
         if($fullOutput == true) //handles quantity buttons
         {
@@ -36,18 +42,13 @@ function printCart($cartItems, $database, $fullOutput)
             echo "<form method=\"post\">";
             echo "<input type=\"hidden\" name=\" productID\" value=" . $productID . ">";
             echo "<input type=\"hidden\" name=\" quantity\" value=" . $quantity . ">";
-            echo "<button id=\"decrease-quantity\" type=\"submit\" name=\"decrease\">-</button>";
-            echo "<button id=\"increase-quantity\" type=\"submit\" name=\"increase\">+</button>";
-            echo "<button id=\"remove-item\" type=\"submit\" name=\"remove\">x</button>";
+            echo "<button class=\"quantity-button\" id=\"decrease-quantity\" type=\"submit\" name=\"decrease\">-</button>";
+            echo "<button class=\"quantity-button\" id=\"increase-quantity\" type=\"submit\" name=\"increase\">+</button>";
+            echo "<button class=\"quantity-button\" id=\"remove-item\" type=\"submit\" name=\"remove\">x</button>";
             echo "</form>";
             echo "</td>";
     
-            echo "<td>$" . $price . "</td>";
-
-            if($item['inStock'] == false)
-            {
-                echo "<td>" . "ITEM NOT IN STOCK" . "</td>";
-            }
+            echo "<td class=\"item-price\">$" . number_format($price, 2) . "</td>";
         }
 
         echo "</tr>";
@@ -60,21 +61,18 @@ function printCart($cartItems, $database, $fullOutput)
     //handles subtotal, shipping, and total cost, requires $database
     if($fullOutput == true) //for cart page
     {
-        echo "<tr/><tr/><tr/>";
-        echo "<tr><td>Subtotal:</td><td/><td/><td/><td>$" . $subtotal . "</td></tr>";
-        echo "<tr><td>Shipping:</td><td/><td/><td/><td>$" . $shipping . "</td></tr>";
-        echo "<tr><td>Total:</td><td/><td/><td/><td>$" . $total . "</td></tr>";
+        echo "<tr><td/><td/><td/><td class=\"cost-label\">Subtotal:</td><td class=\"cost-sum\">$" . number_format($subtotal, 2) . "</td></tr>";
+        echo "<tr><td/><td/><td/><td class=\"cost-label\">Shipping:</td><td class=\"cost-sum\">$" . number_format($shipping, 2) . "</td></tr>";
+        echo "<tr><td/><td/><td/><td class=\"cost-label\">Total:</td><td class=\"cost-sum\">$" . number_format($total, 2) . "</td></tr>";
     }
-    else //for order summary pages (i.e. checkout, invoice lookup)
+    else //for order summary pages (i.e. checkout, invoice lookup) (has alternate spacing)
     {
-        echo "<tr/><tr/><tr/>";
-        echo "<tr><td>Subtotal:</td><td/><td/><td>$" . $subtotal . "</td></tr>";
-        echo "<tr><td>Shipping:</td><td/><td/><td>$" . $shipping . "</td></tr>";
-        echo "<tr><td>Total:   </td><td/><td/><td>$" . $total . "</td></tr>";
+        echo "<tr><td/><td class=\"cost-label\">Subtotal:</td><td class=\"cost-sum\">$" . number_format($subtotal, 2) . "</td></tr>";
+        echo "<tr><td/><td class=\"cost-label\">Shipping:</td><td class=\"cost-sum\">$" . number_format($shipping, 2) . "</td></tr>";
+        echo "<tr><td/><td class=\"cost-label\">Total:</td><td class=\"cost-sum\">$" . number_format($total, 2) . "</td></tr>";
     }
 
     echo "</table>";
-    echo "</div>"; //div-cart
 }
 
 function getCartContents($rs, $database, $legacyDB)
@@ -114,6 +112,21 @@ function getCartContents($rs, $database, $legacyDB)
     }
 
     return $output;
+}
+
+//isCartEmpty() - simple function that returns boolean if at least one item is found in cart array
+//returned from getCartContents();
+//inputs -
+    //$cartItems - the array of items in the user's cart called from getCartContents()
+//output - boolean; true if at least one item, false otherwise
+function isCartEmpty($cartItems)
+{
+    foreach($cartItems as $item)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 //isValidQuantity() - handles the quantity of an item in the cart
