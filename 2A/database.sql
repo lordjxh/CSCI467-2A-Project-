@@ -14,7 +14,7 @@ CREATE TABLE UserAccount (
     city VARCHAR(48),
     state VARCHAR(2),
     zipcode VARCHAR(10),
-    phone VARCHAR(12),
+    phone VARCHAR(14),
     email VARCHAR(30),
     userPassword VARCHAR(32)
 ) AUTO_INCREMENT = 10001;
@@ -90,7 +90,7 @@ CREATE TABLE ShippingInfo (
     shippingState VARCHAR(2),
     shippingZipcode VARCHAR(10),
     shippingEmail VARCHAR(32),
-    shippingPhone VARCHAR(12),
+    shippingPhone VARCHAR(14),
 
     FOREIGN KEY (invoiceNO) REFERENCES InvoiceDB(invoiceNO)
 );
@@ -105,7 +105,7 @@ CREATE TABLE BillingInfo (
     billingState VARCHAR(2),
     billingZipcode VARCHAR(10),
     billingEmail VARCHAR(32),
-    billingPhone VARCHAR(12),
+    billingPhone VARCHAR(14),
 
     FOREIGN KEY (invoiceNO) REFERENCES InvoiceDB(invoiceNO)
 );
