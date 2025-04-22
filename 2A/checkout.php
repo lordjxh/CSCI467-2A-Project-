@@ -28,7 +28,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
-        //$valid = validateCheckout();
+        $valid = validateCheckout();
 
         //if(isset($valid['errors']))
         //{
@@ -71,18 +71,19 @@
                 <h1>Contact & Shipping</h1>
 
                 <h2>Name</h2>
-                <p><input id="firstName" name="firstName" placeholder="First name..." value="<?php echo $_POST['firstName']; ?>" oninput="this.className = ''"></p>
-                <p><input id="lastName" name="lastName" placeholder="Last name..." value="<?php echo $_POST['lastName']; ?>" oninput="this.className = ''"></p>
+                <p><input id="firstName" name="firstName" placeholder="First name..." maxlength="32" value="<?php echo $_POST['firstName']; ?>" oninput="this.className = ''"></p>
+                <p><input id="lastName" name="lastName" placeholder="Last name..." maxlength="32" value="<?php echo $_POST['lastName']; ?>" oninput="this.className = ''"></p>
 
                 <h2>Address</h2>
-                <p><input id="address" name="address" placeholder="Address..." value="<?php echo $_POST['address']; ?>" oninput="this.className = ''"></p>
-                <p><input id="city" name="city" placeholder="City..." value="<?php echo $_POST['city']; ?>" oninput="this.className = ''"></p>
-                <p><input id="state" name="state" placeholder="State..." value="<?php echo $_POST['state']; ?>" oninput="this.className = ''"></p>
-                <p><input id="zipcode" name="zipcode" placeholder="Zipcode..." value="<?php echo $_POST['zipcode']; ?>" oninput="this.className = ''"></p>
+                <p><input id="address" name="address" placeholder="Address..." maxlength="64" value="<?php echo $_POST['address']; ?>" oninput="this.className = ''"></p>
+                <p><input id="city" name="city" placeholder="City..." maxlength="48" value="<?php echo $_POST['city']; ?>" oninput="this.className = ''"></p>
+                <p><input id="state" name="state" placeholder="State..." maxlength="2" value="<?php echo $_POST['state']; ?>" oninput="this.className = ''"></p>
+                <p><input id="zipcode" name="zipcode" placeholder="Zipcode..." maxlength="10" value="<?php echo $_POST['zipcode']; ?>" oninput="this.className = ''"></p>
 
                 <h2>Contact Info</h2>
-                <p><input id="email" name="email" placeholder="Email..." value="<?php echo $_POST['email']; ?>" oninput="this.className = ''"></p>
-                <p><input id="phone" name="phone" placeholder="Phone..." value="<?php echo $_POST['phone']; ?>" oninput="this.className = ''"></p>
+                <p><input type="email" id="email" name="email" placeholder="Email..." maxlength="32" value="<?php echo $_POST['email']; ?>" oninput="this.className = ''"></p>
+                <p><input type="tel" id="phone" name="phone" placeholder="Phone..." maxlength="14" value="<?php echo $_POST['phone']; ?>" oninput="this.className = ''"></p>
+                <div id="shippingError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
 
             </div>
 
@@ -90,24 +91,26 @@
                 <h2>Billing Address</h2>
                 <p><input id="matchShipping" name="matchShipping" type="checkbox">Same as Shipping</p>
 
-                <p><input id="billingFirstName" name="billingFirstName" placeholder="First name..." value="<?php echo $_POST['billingFirstName']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingLastName" name="billingLastName" placeholder="Last name..." value="<?php echo $_POST['billingLastName']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingAddress" name="billingAddress" placeholder="Address..." value="<?php echo $_POST['billingAddress']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingCity" name="billingCity" placeholder="City..." value="<?php echo $_POST['billingCity']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingState" name="billingState" placeholder="State..." value="<?php echo $_POST['billingState']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingZipcode" name="billingZipcode" placeholder="Zipcode..." value="<?php echo $_POST['billingZipcode']; ?>" oninput="this.className = ''"></p>
+                <p><input id="billingFirstName" name="billingFirstName" maxlength="32" placeholder="First name..." value="<?php echo $_POST['billingFirstName']; ?>" oninput="this.className = ''"></p>
+                <p><input id="billingLastName" name="billingLastName" maxlength="32" placeholder="Last name..." value="<?php echo $_POST['billingLastName']; ?>" oninput="this.className = ''"></p>
+                <p><input id="billingAddress" name="billingAddress" maxlength="64" placeholder="Address..." value="<?php echo $_POST['billingAddress']; ?>" oninput="this.className = ''"></p>
+                <p><input id="billingCity" name="billingCity" maxlength="48" placeholder="City..." value="<?php echo $_POST['billingCity']; ?>" oninput="this.className = ''"></p>
+                <p><input id="billingState" name="billingState" maxlength="2" placeholder="State..." value="<?php echo $_POST['billingState']; ?>" oninput="this.className = ''"></p>
+                <p><input id="billingZipcode" name="billingZipcode" maxlength="10" placeholder="Zipcode..." value="<?php echo $_POST['billingZipcode']; ?>" oninput="this.className = ''"></p>
 
                 <h2>Billing Contact Info</h2>
-                <p><input id="billingEmail" name="billingEmail" placeholder="Email..." value="<?php echo $_POST['billingEmail']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingPhone" name="billingPhone" placeholder="Phone..." value="<?php echo $_POST['billingPhone']; ?>" oninput="this.className = ''"></p>
+                <p><input type="email" id="billingEmail" name="billingEmail" placeholder="Email..." maxlength="32" value="<?php echo $_POST['billingEmail']; ?>" oninput="this.className = ''"></p>
+                <p><input type="tel" id="billingPhone" name="billingPhone" placeholder="Phone..." maxlength="14" value="<?php echo $_POST['billingPhone']; ?>" oninput="this.className = ''"></p>
+                <div id="billingError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
             </div>
 
             <div class="tab"> <!-- Payment Info -->
                 <h2>Payment Info</h2>
-                <p><input id="cardNumber" name="cardNumber" placeholder="Card Number..." value="<?php echo $_POST['cardNumber']; ?>" oninput="this.className = ''"></p>
-                <p><input id="cardMonth" name="cardMonth" placeholder="MM..." value="<?php echo $_POST['cardMonth']; ?>" oninput="this.className = ''"></p>
-                <p><input id="cardYear" name="cardYear" placeholder="YY..." value="<?php echo $_POST['cardYear']; ?>" oninput="this.className = ''"></p>
-                <p><input id="cardSecurity" name="cardSecurity" placeholder="Security..." value="<?php echo $_POST['cardSecurity']; ?>" oninput="this.className = ''"></p>
+                <p><input id="cardNumber" name="cardNumber" placeholder="Card Number..." maxlength="19" value="<?php echo $_POST['cardNumber']; ?>" oninput="this.className = ''"></p>
+                <p><input id="cardMonth" name="cardMonth" placeholder="MM..." maxlength="2" value="<?php echo $_POST['cardMonth']; ?>" oninput="this.className = ''"></p>
+                <p><input id="cardYear" name="cardYear" placeholder="YY..." maxlength="2" value="<?php echo $_POST['cardYear']; ?>" oninput="this.className = ''"></p>
+                <p><input id="cardSecurity" name="cardSecurity" placeholder="Security..." maxlength="4" value="<?php echo $_POST['cardSecurity']; ?>" oninput="this.className = ''"></p>
+                <div id="paymentError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
             </div>
 
             <div class="tab"> <!-- Final Confirmation of Purchase -->
@@ -158,7 +161,15 @@
         <?php
             //print cart contents as summary view
             echo "<div class=\"split right\">";
-            printCart($_SESSION['cart'], $database, false);
+            if(isCartEmpty($_SESSION['cart']))
+            {
+                printCart($_SESSION['cart'], $database, false);
+            }
+            else
+            {
+                echo "<p>The cart is empty.</p>";
+            }
+
             echo "</div>";
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -166,7 +177,6 @@
                 echo "<script> currentTab = 3; </script>";
             }
         ?>
-
-        <script src="js/checkout_script.js"></script>
+        <script src="js/checkout_script.js" defer></script>
     </body>
 </html>
