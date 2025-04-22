@@ -121,12 +121,12 @@ function getCartContents($rs, $database, $legacyDB)
 //output - boolean; true if at least one item, false otherwise
 function isCartEmpty($cartItems)
 {
-    foreach($cartItems as $item)
+    foreach($cartItems as $item) //if at least one item exists, function will return false
     {
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 //isValidQuantity() - handles the quantity of an item in the cart
