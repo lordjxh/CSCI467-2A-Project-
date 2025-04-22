@@ -57,13 +57,6 @@ function validateCheckout()
     $trans = $trans_sec1 . $trans_sec2;
     $trans_formatted = $trans_sec1 . "-" . $trans_sec2;
 
-    //format credit cart for API call
-    $cc_sect1 = substr($cc, 0, 4);
-    $cc_sect2 = substr($cc, 4, 4);
-    $cc_sect3 = substr($cc, 8, 4);
-    $cc_sect4 = substr($cc, 12, 4);
-    $cc = $cc_sect1 . " " . $cc_sect2 . " " . $cc_sect3 . " " . $cc_sect4;
-
     //set name to use based on shipping or billing
     if($_POST['matchShipping'] == true)
     {

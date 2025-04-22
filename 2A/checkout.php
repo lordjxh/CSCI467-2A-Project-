@@ -1,25 +1,61 @@
 <?php
     include "secrets.php";
     include "php_functions/database_functions.php";
+    include "php_functions.user_functions.php";
     include "php_functions/ccValidation.php";
     include "php_functions/cart_functions.php";
     include "php_functions/checkout_functions.php";
 
     session_start();
 
+    //establish connection(s) to database(s)
     $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
     $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
-    //need a way to determine if a user has an account or is a guest user
-
-    $userID = $_SESSION['userID']; //it is assumed reaching this point the user should have a valid userID...
-
-    if($_SESSION['cart'] == NULL) //if cart fails to pass, call it back again
+    //this page should not be accessed without a userID. Stop page if no userID is found in $_SESSION
+    if($_SESSION['userID'] == NULL)
     {
-        $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $userID . ";";
-        $rs = getSQL($database, $cartQuery);
-        $output = getCartContents($rs, $database, $legacyDB);
-        $_SESSION['cart'] = $output;
+        http_response_code(401);
+        die("This page should not have been reached without a valid userID");
+    }
+
+    //ensure that $_SESSION['logged_on'] is set before proceeding
+    if($_SESSION['logged_in'] != true)
+    {
+        if($_SESSION['logged_in'] != false)
+        {
+            http_response_code(400);
+            die("Failed to determine account status.");
+        }
+    }
+
+    //force retrieving the cart again (ensures quantity does not change during checkout)
+    if($_SESSION['logged_in'] == true) //if the user is logged in, query by UserAccID
+    {
+        $cartQuery = "SELECT * FROM CustomerCart WHERE UserAccID = " . $_SESSION['userID'] . ";";
+    }
+    else //else query by UserID
+    {
+        $cartQuery = "SELECT * FROM CustomerCart WHERE UserID = " . $_SESSION['userID'] . ";";
+    }
+
+    $rs = getSQL($database, $cartQuery);
+    $cartItems = getCartContents($rs, $database, $legacyDB);
+    $_SESSION['cart'] = $cartItems;
+
+    //confirm the cart is not empty
+    if(isCartEmpty($_SESSION['cart']) == true)
+    {
+        http_response_code(403);
+        die("The user's cart is empty. This page should not be accessible with zero items.");
+    }
+
+    //confirm the store front's available quantity did not change during checkout, otherwise redirect back to cart.php
+    if(confirmValidQuantity($_SESSION['cart']) == false)
+    {
+        header("Refresh: 5; URL=cart.php");
+        echo "One or more items in your cart are no longer available.</br>Redirecting to cart in 5 seconds...";
+        exit();
     }
 
     //retrieve subtotal and shipping amounts for processing
@@ -30,31 +66,44 @@
     {
         $valid = validateCheckout();
 
-        //if(isset($valid['errors']))
-        //{
-            //$printErrors = true;
-        //}
-        //else
-        //{
+        if(isset($valid['errors']))
+        {
+            $printErrors = true;
+        }
+        else
+        {
             //create invoice, retrieve invoiceID from new value inserted
-            $invoiceID = processInvoice($userID, $_SESSION['cart'], $database);
+            $invoiceID = processInvoice($_SESSION['userID'], $_SESSION['logged_in'], $_SESSION['cart'], $database);
 
             //process user input for order into shipping and billing info tables
             processShipping($invoiceID, $database);
             processBilling($invoiceID, $_POST['matchShipping'], $database);
             
             //move purchased items from CustomerCart to Purchases table, and update inventory
-            processPurchases($userID, true, $invoiceID, $database);
+            processPurchases($_SESSION['userID'], $_SESSION['logged_in'], $invoiceID, $database);
             
+            //if($_POST['storeShipping'] == true)
+            //{
+                //storeUserShipping();
+            //}
+
+            //if($_POST['storeBilling'] == true)
+            //{
+                //storeUserBilling();
+            //}
+
             //if($_POST['storeCard'] == true)
             //{
                 //storeUserCard();
             //}
             
+            //store invoiceID into $_SESSION variable for usage on next page
+            $_SESSION['invoiceID'] = $invoiceID;
+
             //navigate to checkout_confirmation upon reaching this point successfully
             header("Location: checkout_confirmation.php");
             exit();
-        //}
+        }
     }
 ?>
 
@@ -64,6 +113,22 @@
         <script> var currentTab = 0; </script>
     </head>
     <body>
+        <!-- Center Page -->
+        <?php
+            //if any errors occurred during checkout, print here
+            if($printErrors == true)
+            {
+                echo "<div class=\"errorMessage\">";
+                echo "<p>Transaction failed with the following errors:</p>";
+
+                foreach($valid['errors'] as $error)
+                {
+                    echo "<p>" . $error . "</p>";
+                }
+
+                echo "</div>";
+            }
+        ?>
         <!-- Form Entry (Left Side) -->
         <div class="split left">
         <form id="regForm" method="post">
@@ -145,23 +210,13 @@
 
             <input type="hidden" id="amount" name="amount" value="<?php echo ($subtotal + $shipping); ?>"/>
         </form>
-        <?php
-            //if any errors occurred during checkout, print here
-            if($printErrors == true)
-            {
-                foreach($valid['errors'] as $error)
-                {
-                    echo "<p>" . $error . "</p>";
-                }
-            }
-        ?>
         </div>
 
         <!-- Cart Summary (Right Side) -->
         <?php
             //print cart contents as summary view
             echo "<div class=\"split right\">";
-            if(isCartEmpty($_SESSION['cart']))
+            if(isCartEmpty($_SESSION['cart']) == false)
             {
                 printCart($_SESSION['cart'], $database, false);
             }

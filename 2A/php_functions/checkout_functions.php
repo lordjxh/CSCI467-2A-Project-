@@ -1,6 +1,9 @@
 <?php
-
-function processInvoice($userID, $cartItems, $database)
+//
+//
+    //$isAccount - boolean determines if the user has an account, which changes SQL statement to pull from
+//
+function processInvoice($userID, $isAccount, $cartItems, $database)
 {
     global $trans;  //used in ccValidation.php
 
@@ -8,7 +11,7 @@ function processInvoice($userID, $cartItems, $database)
     $shipping = getShippingCost($cartItems, $database);
     $totalCost = ($subtotal + $shipping);
 
-    if($userID == NULL)
+    if($isAccount == false)
     {
         $statement = "INSERT INTO InvoiceDB(subtotal, shippingCost, grandTotal, datePaid, authorizationNO, fulfillmentStatus, shippingFlag) VALUES(" . 
             $subtotal . ", " . $shipping . ", " . $totalCost . ", '" . date("Y-m-d H:m:s") . "', " . $trans . ", 'N', 'N');";
@@ -20,10 +23,7 @@ function processInvoice($userID, $cartItems, $database)
     }
 
     insertDatabaseValue($database, $statement);
-    
     $invoiceID = $database->lastInsertID();
-    
-    echo $invoiceID;
 
     return $invoiceID;
 }
@@ -45,9 +45,9 @@ function processShipping($invoiceID, $database)
     $shippingPhone = $_POST['phone'];
 
     $statement = "INSERT INTO ShippingInfo(invoiceNO, shippingFirstName, shippingLastName, shippingAddress, shippingCity, " . 
-        "shippingState, shippingZipcode, shippingEmail, shippingPhone) VALUES (" . $invoiceID . ", '" . $shippingFirstName . "', '" . 
+        "shippingState, shippingZipcode, shippingEmail, shippingPhone) VALUES ('" . $invoiceID . "', '" . $shippingFirstName . "', '" . 
         $shippingLastName . "', '" . $shippingAddr . "', '" . $shippingCity . "', '" . $shippingState . "', " . $shippingZipcode . ", '" . 
-        $shippingEmail . "', " . $shippingPhone . ");";
+        $shippingEmail . "', '" . $shippingPhone . "');";
 
     insertDatabaseValue($database, $statement);
 }
@@ -85,9 +85,9 @@ function processBilling($invoiceID, $useShipping, $database)
     }
 
     $statement = "INSERT INTO BillingInfo(invoiceNO, billingFirstName, billingLastName, billingAddress, billingCity, " . 
-        "billingState, billingZipcode, billingEmail, billingPhone) VALUES (" . $invoiceID . ", '" . $billingFirstName . "', '" . 
-        $billingLastName . "', '" . $billingAddr . "', '" . $billingCity . "', '" . $billingState . "', " . $billingZipcode . ", '" . 
-        $billingEmail . "', " . $billingPhone . ");";
+        "billingState, billingZipcode, billingEmail, billingPhone) VALUES ('" . $invoiceID . "', '" . $billingFirstName . "', '" . 
+        $billingLastName . "', '" . $billingAddr . "', '" . $billingCity . "', '" . $billingState . "', '" . $billingZipcode . "', '" . 
+        $billingEmail . "', '" . $billingPhone . "');";
 
     insertDatabaseValue($database, $statement);
 }
@@ -155,6 +155,24 @@ function processPurchases($userID, $isAccount, $invoiceID, $database)
     }
 
     deleteDatabaseValue($database, $statement5);
+}
+
+//confirmValidQuantity() - confirms during checkout that available quantities did not change, otherwise will
+//prevent the checkout from proceeding.
+//Inputs -
+    //
+//Output - boolean for status of item availability
+function confirmValidQuantity($cartItems)
+{
+    foreach($cartItems as $item)
+    {
+        if($item['inStock'] == false)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function storeUserCard()
