@@ -27,7 +27,10 @@
                 <input type="text" id="address" name="address" required>
                 <br>
                 <label for="state">State:</label>
-                <input type="text" id="state" name="state" required>
+                <input type="text" id="state" name="state" maxlength="2" required>
+                <br>
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required>
                 <br>
                 <label for="zipcode">Zip code:</label>
                 <input type="text" id="zipcode" name="zipcode" required>
@@ -61,6 +64,7 @@
                     $last = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
                     $address = isset($_POST['address']) ? trim($_POST['address']) : '';
                     $state = isset($_POST['state']) ? trim($_POST['state']) : '';
+                    $city = isset($_POST['city']) ? trim($_POST['city']) : '';
                     $zipcode = isset($_POST['zipcode']) ? trim($_POST['zipcode']) : '';
                     $phoneNum = isset($_POST['phoneNum']) ? trim($_POST['phoneNum']) : '';
                     $password = isset($_POST['signup_password']) ? trim($_POST['signup_password']) : '';
@@ -76,11 +80,12 @@
 
                     /*if email is not already registered in the database, then user's data is stored*/
                     if(!$result) {
-                        $insert=$database->prepare("INSERT INTO UserAccount(firstName, lastName, shippingAddress, state, zipcode, phone, email, userPassword) VALUES (:firstName, :lastName,>
+                        $insert=$database->prepare("INSERT INTO UserAccount(firstName, lastName, shippingAddress, state, city, zipcode, phone, email, userPassword) VALUES (:firstName, :lastName, :shippingAddress, :state, :city, :zipcode, :phone, :email, :userPassword);");
                         $insert->bindParam(':firstName', $first, PDO::PARAM_STR);
                         $insert->bindParam(':lastName', $last, PDO::PARAM_STR);
                         $insert->bindParam(':shippingAddress', $address, PDO::PARAM_STR);
                         $insert->bindParam(':state', $state, PDO::PARAM_STR);
+                        $insert->bindParam(':city', $city, PDO::PARAM_STR);
                         $insert->bindParam(':zipcode', $zipcode, PDO::PARAM_STR);
                         $insert->bindParam(':phone', $phoneNum, PDO::PARAM_STR);
                         $insert->bindParam(':email', $email, PDO::PARAM_STR);
