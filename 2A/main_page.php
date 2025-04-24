@@ -12,6 +12,8 @@
 
     $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
     $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
+
+    loadLegacyProducts($database, $legacyDB);
 ?>
 <html lang="en">
     <head>
@@ -46,9 +48,6 @@
         <main>
             <div>
                 <h2> Full Product List </h2>
-                <!--will be able to filter catalog with keywords-->
-                <input type="text" id="search" onkeyup="myFunction()" placeholder="Search">
-
                 <div id="table-scroll">
                     <table>
                         <?php
@@ -69,6 +68,23 @@
                            <td> <?php echo $row['description']; ?> <br>
                            $<?php echo $row['price']; ?> <br>
                            <?php echo $row['weight'];?> lbs <br>
+                           <?php
+                                $query = $database->prepare("SELECT * FROM Products WHERE legacyID = :legacyID");
+                                if(!$query) {
+                                    echo "Quantity not available right now!";
+                                } else {
+                                    $query->bindParam(':legacyID', $row['number']);
+                                    $query->execute();
+                                    $result = $query->fetch(PDO::FETCH_ASSOC);
+
+                                    if($result && isset($result['storeQuantity'])) {
+                                        echo "Available: " . $result['storeQuantity'];
+                                    } else {
+                                        echo "Available: N/A";
+                                    }
+                                }
+                           ?> <br>
+                           </td>  
                            <td>
                              <!--each row has an 'Add to Cart' button for its corresponding item-->
                              <form action="main_page.php">
