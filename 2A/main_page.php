@@ -130,6 +130,11 @@
 
                                             if(!$add->execute()) {
                                                 echo "Failed to add item to cart!";
+                                            } else {
+                                                $remove = $database->prepare("UPDATE Products SET storeQuantity = storeQuantity - :quantity WHERE productID = :productID");
+                                                $remove->bindParam(':productID', $productID, PDO::PARAM_INT);
+                                                $remove->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+                                                $remove->execute();
                                             }
                                         /*else UPDATE is used*/
                                         } else {
@@ -140,6 +145,11 @@
 
                                             if(!$update->execute()) {
                                                 echo "Failed to add item to cart!";
+                                            } else {
+                                                $remove = $database->prepare("UPDATE Products SET storeQuantity = storeQuantity - :quantity WHERE productID = :productID");
+                                                $remove->bindParam(':productID', $productID, PDO::PARAM_INT);
+                                                $remove->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+                                                $remove->execute();
                                             }
                                        }
                                     /*if the user is not logged in, then the above is repeated, except userID is used instead of userAccID*/
