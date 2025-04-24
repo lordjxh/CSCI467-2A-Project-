@@ -32,7 +32,7 @@ nav a:hover {
     justify-content: flex-end;
 }
 
-/* Main Page Dividers */
+/* Main Page Divider & Sections */
 
 .container {
     display: flex;
@@ -106,11 +106,34 @@ td, th {
     text-align: right;
 }
 
-.cost-label {
-    text-align: right;
-}
+/* Summary Elements */
 
+.total-summary {
+    margin-top: 2rem;
+    max-width: 600px;
+    width: 100%;
+}
+  
+.sum-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 45%;
+    padding: 0.25rem 0;
+    gap: 10%;
+}
+  
+.cost-label, .cost-sum {
+    margin: 0;
+    font-size: 1rem;
+}
+  
+.cost-label {
+    font-weight: bold;
+}
+  
 .cost-sum {
+    margin-left: auto;
     text-align: right;
 }
 

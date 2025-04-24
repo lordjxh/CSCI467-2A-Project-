@@ -82,6 +82,7 @@
                         if($cartItems != NULL)
                         {
                             printCart($cartItems, $database, true);
+                            printTotals($cartItems, $database);
                         }
                         else
                         {
