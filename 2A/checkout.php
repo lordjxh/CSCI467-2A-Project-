@@ -113,125 +113,133 @@
         <script> var currentTab = 0; </script>
     </head>
     <body>
-        <!-- Center Page -->
-        <?php
-            //if any errors occurred during checkout, print here
-            if($printErrors == true)
-            {
-                echo "<div class=\"errorMessage\">";
-                echo "<p>Transaction failed with the following errors:</p>";
+        <div class="container">        
+            <!-- Form Entry (Left Side) -->
+            <div class="left">
+                <div class="section">
+                    <form id="regForm" method="post">
+                        <div class="tab"> <!-- Customer Info and Shipping Info -->
+                            <h1>Contact & Shipping</h1>
+                            
+                            <h2>Name</h2>
+                            <p><input id="firstName" name="firstName" placeholder="First name..." maxlength="32" value="<?php echo $_POST['firstName']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="lastName" name="lastName" placeholder="Last name..." maxlength="32" value="<?php echo $_POST['lastName']; ?>" oninput="this.className = ''"></p>
+                            
+                            <h2>Address</h2>
+                            <p><input id="address" name="address" placeholder="Address..." maxlength="64" value="<?php echo $_POST['address']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="city" name="city" placeholder="City..." maxlength="48" value="<?php echo $_POST['city']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="state" name="state" placeholder="State..." maxlength="2" value="<?php echo $_POST['state']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="zipcode" name="zipcode" placeholder="Zipcode..." maxlength="10" value="<?php echo $_POST['zipcode']; ?>" oninput="this.className = ''"></p>
+                            
+                            <h2>Contact Info</h2>
+                            <p><input type="email" id="email" name="email" placeholder="Email..." maxlength="32" value="<?php echo $_POST['email']; ?>" oninput="this.className = ''"></p>
+                            <p><input type="tel" id="phone" name="phone" placeholder="Phone..." maxlength="14" value="<?php echo $_POST['phone']; ?>" oninput="this.className = ''"></p>
+                            <div id="shippingError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
+                        </div>
 
-                foreach($valid['errors'] as $error)
-                {
-                    echo "<p>" . $error . "</p>";
-                }
+                        <div class="tab"> <!-- Billing Address -->
+                            <h2>Billing Address</h2>
+                            <p><input id="matchShipping" name="matchShipping" type="checkbox">Same as Shipping</p>
+                            <p><input id="billingFirstName" name="billingFirstName" maxlength="32" placeholder="First name..." value="<?php echo $_POST['billingFirstName']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="billingLastName" name="billingLastName" maxlength="32" placeholder="Last name..." value="<?php echo $_POST['billingLastName']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="billingAddress" name="billingAddress" maxlength="64" placeholder="Address..." value="<?php echo $_POST['billingAddress']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="billingCity" name="billingCity" maxlength="48" placeholder="City..." value="<?php echo $_POST['billingCity']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="billingState" name="billingState" maxlength="2" placeholder="State..." value="<?php echo $_POST['billingState']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="billingZipcode" name="billingZipcode" maxlength="10" placeholder="Zipcode..." value="<?php echo $_POST['billingZipcode']; ?>" oninput="this.className = ''"></p>
+                            
+                            <h2>Billing Contact Info</h2>
+                            <p><input type="email" id="billingEmail" name="billingEmail" placeholder="Email..." maxlength="32" value="<?php echo $_POST['billingEmail']; ?>" oninput="this.className = ''"></p>
+                            <p><input type="tel" id="billingPhone" name="billingPhone" placeholder="Phone..." maxlength="14" value="<?php echo $_POST['billingPhone']; ?>" oninput="this.className = ''"></p>
+                            <div id="billingError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
+                        </div>
 
-                echo "</div>";
-            }
-        ?>
-        <!-- Form Entry (Left Side) -->
-        <div class="split left">
-        <form id="regForm" method="post">
-            <div class="tab"> <!-- Customer Info and Shipping Info -->
-                <h1>Contact & Shipping</h1>
+                        <div class="tab"> <!-- Payment Info -->
+                            <h2>Payment Info</h2>
+                            <p><input id="cardNumber" name="cardNumber" placeholder="Card Number..." maxlength="19" value="<?php echo $_POST['cardNumber']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="cardMonth" name="cardMonth" placeholder="MM..." maxlength="2" value="<?php echo $_POST['cardMonth']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="cardYear" name="cardYear" placeholder="YY..." maxlength="2" value="<?php echo $_POST['cardYear']; ?>" oninput="this.className = ''"></p>
+                            <p><input id="cardSecurity" name="cardSecurity" placeholder="Security..." maxlength="4" value="<?php echo $_POST['cardSecurity']; ?>" oninput="this.className = ''"></p>
+                            <div id="paymentError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
+                        </div>
 
-                <h2>Name</h2>
-                <p><input id="firstName" name="firstName" placeholder="First name..." maxlength="32" value="<?php echo $_POST['firstName']; ?>" oninput="this.className = ''"></p>
-                <p><input id="lastName" name="lastName" placeholder="Last name..." maxlength="32" value="<?php echo $_POST['lastName']; ?>" oninput="this.className = ''"></p>
+                        <div class="tab"> <!-- Final Confirmation of Purchase -->
+                            <h2>Order Details</h2>
+                            <h3>Shipping</h3>
+                            <p id="fullNameOutput"></p>
+                            <p id="streetAddressOutput"></p>
+                            <p id="fullAddressOutput"></p>
+                            <p id="fullContactOutput"></p>
 
-                <h2>Address</h2>
-                <p><input id="address" name="address" placeholder="Address..." maxlength="64" value="<?php echo $_POST['address']; ?>" oninput="this.className = ''"></p>
-                <p><input id="city" name="city" placeholder="City..." maxlength="48" value="<?php echo $_POST['city']; ?>" oninput="this.className = ''"></p>
-                <p><input id="state" name="state" placeholder="State..." maxlength="2" value="<?php echo $_POST['state']; ?>" oninput="this.className = ''"></p>
-                <p><input id="zipcode" name="zipcode" placeholder="Zipcode..." maxlength="10" value="<?php echo $_POST['zipcode']; ?>" oninput="this.className = ''"></p>
+                            <h3>Billing</h3>
+                            <p id="cardNumberOutput"></p>
+                            <p id="cardNameOutput"></p>
+                            <p id="billingAddressOutput"></p>
+                            <p id="billingFullAddressOutput"></p>
+                            <p id="billingFullContactOutput"></p>
+                        </div>
 
-                <h2>Contact Info</h2>
-                <p><input type="email" id="email" name="email" placeholder="Email..." maxlength="32" value="<?php echo $_POST['email']; ?>" oninput="this.className = ''"></p>
-                <p><input type="tel" id="phone" name="phone" placeholder="Phone..." maxlength="14" value="<?php echo $_POST['phone']; ?>" oninput="this.className = ''"></p>
-                <div id="shippingError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
+                        <div style="overflow:auto;"> <!-- Previous/Next Buttons -->
+                            <div style="float:right;">
+                                <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                                <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                            </div>
+                        </div>
 
-            </div>
+                        <div style="text-align:center;margin-top:40px;"> <!-- Navigation Bubbles -->
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                        </div>
 
-            <div class="tab"> <!-- Billing Address -->
-                <h2>Billing Address</h2>
-                <p><input id="matchShipping" name="matchShipping" type="checkbox">Same as Shipping</p>
-
-                <p><input id="billingFirstName" name="billingFirstName" maxlength="32" placeholder="First name..." value="<?php echo $_POST['billingFirstName']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingLastName" name="billingLastName" maxlength="32" placeholder="Last name..." value="<?php echo $_POST['billingLastName']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingAddress" name="billingAddress" maxlength="64" placeholder="Address..." value="<?php echo $_POST['billingAddress']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingCity" name="billingCity" maxlength="48" placeholder="City..." value="<?php echo $_POST['billingCity']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingState" name="billingState" maxlength="2" placeholder="State..." value="<?php echo $_POST['billingState']; ?>" oninput="this.className = ''"></p>
-                <p><input id="billingZipcode" name="billingZipcode" maxlength="10" placeholder="Zipcode..." value="<?php echo $_POST['billingZipcode']; ?>" oninput="this.className = ''"></p>
-
-                <h2>Billing Contact Info</h2>
-                <p><input type="email" id="billingEmail" name="billingEmail" placeholder="Email..." maxlength="32" value="<?php echo $_POST['billingEmail']; ?>" oninput="this.className = ''"></p>
-                <p><input type="tel" id="billingPhone" name="billingPhone" placeholder="Phone..." maxlength="14" value="<?php echo $_POST['billingPhone']; ?>" oninput="this.className = ''"></p>
-                <div id="billingError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
-            </div>
-
-            <div class="tab"> <!-- Payment Info -->
-                <h2>Payment Info</h2>
-                <p><input id="cardNumber" name="cardNumber" placeholder="Card Number..." maxlength="19" value="<?php echo $_POST['cardNumber']; ?>" oninput="this.className = ''"></p>
-                <p><input id="cardMonth" name="cardMonth" placeholder="MM..." maxlength="2" value="<?php echo $_POST['cardMonth']; ?>" oninput="this.className = ''"></p>
-                <p><input id="cardYear" name="cardYear" placeholder="YY..." maxlength="2" value="<?php echo $_POST['cardYear']; ?>" oninput="this.className = ''"></p>
-                <p><input id="cardSecurity" name="cardSecurity" placeholder="Security..." maxlength="4" value="<?php echo $_POST['cardSecurity']; ?>" oninput="this.className = ''"></p>
-                <div id="paymentError" style="color: red; font-size: 0.9em; margin-top: 4px;"></div>
-            </div>
-
-            <div class="tab"> <!-- Final Confirmation of Purchase -->
-                <h2>Order Details</h2>
-                <h3>Shipping</h3>
-                <p id="fullNameOutput"></p>
-                <p id="streetAddressOutput"></p>
-                <p id="fullAddressOutput"></p>
-                <p id="fullContactOutput"></p>
-
-                <h3>Billing</h3>
-                <p id="cardNumberOutput"></p>
-                <p id="cardNameOutput"></p>
-                <p id="billingAddressOutput"></p>
-                <p id="billingFullAddressOutput"></p>
-                <p id="billingFullContactOutput"></p>
-            </div>
-
-            <div style="overflow:auto;"> <!-- Previous/Next Buttons -->
-                <div style="float:right;">
-                    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-                    <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                        <input type="hidden" id="amount" name="amount" value="<?php echo ($subtotal + $shipping); ?>"/>
+                    </form>
                 </div>
             </div>
 
-            <div style="text-align:center;margin-top:40px;"> <!-- Navigation Bubbles -->
-                <span class="step"></span>
-                <span class="step"></span>
-                <span class="step"></span>
-                <span class="step"></span>
-            </div>
+            <!-- Cart Summary (Right Side) -->
+                <div class="right">
+                    <div class="sub-container">
+                        <?php
+                            //if any errors occurred during checkout, print here
+                            if($printErrors == true)
+                            {
+                                echo "<div class=\"section\">";
+                                echo "<div class=\"errorMessage\">";
+                                echo "<p class=\"errorMessage-header\">⚠️ Transaction failed with the following errors:</p>";
 
-            <input type="hidden" id="amount" name="amount" value="<?php echo ($subtotal + $shipping); ?>"/>
-        </form>
+                                foreach($valid['errors'] as $error)
+                                {
+                                    //echo "<p>" . $error . "</p>";
+                                    //echo "<p>Placeholder</p>";
+                                }
+
+                                echo "</div>";
+                                echo "</div>";
+                            }
+                        ?>
+                        <div class="section">
+                            <?php
+                                //print cart contents as summary view
+                                if(isCartEmpty($_SESSION['cart']) == false)
+                                {
+                                    printCart($_SESSION['cart'], $database, false);
+                                    printTotals($_SESSION['cart'], $database);
+                                }
+                                else
+                                {
+                                    echo "<p>The cart is empty.</p>";
+                                }
+
+                                if ($_SERVER['REQUEST_METHOD'] == 'POST')
+                                {
+                                    echo "<script> currentTab = 3; </script>";
+                                }
+                            ?>
+                        </div>
+                    </div>
+                </div>
         </div>
-
-        <!-- Cart Summary (Right Side) -->
-        <?php
-            //print cart contents as summary view
-            echo "<div class=\"split right\">";
-            if(isCartEmpty($_SESSION['cart']) == false)
-            {
-                printCart($_SESSION['cart'], $database, false);
-            }
-            else
-            {
-                echo "<p>The cart is empty.</p>";
-            }
-
-            echo "</div>";
-
-            if ($_SERVER['REQUEST_METHOD'] == 'POST')
-            {
-                echo "<script> currentTab = 3; </script>";
-            }
-        ?>
         <script src="js/checkout_script.js" defer></script>
     </body>
 </html>

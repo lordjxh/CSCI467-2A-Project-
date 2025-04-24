@@ -7,6 +7,7 @@
 //output - HTML table of a user's shopping cart
 function printCart($cartItems, $database, $fullOutput)
 {
+    echo "<div class=\"cart-scroll\">"; //used during checkout specifically
     echo "<table class=\"cart\">";
 
     if($fullOutput == true)
@@ -54,25 +55,34 @@ function printCart($cartItems, $database, $fullOutput)
         echo "</tr>";
     }
 
+    echo "</table>";
+    echo "</div>"; //cart-scroll end
+}
+
+function printTotals($cartItems, $database)
+{
     $subtotal = getSubtotal($cartItems);
     $shipping = getShippingCost($cartItems, $database);
     $total = ($subtotal + $shipping);
 
-    //handles subtotal, shipping, and total cost, requires $database
-    if($fullOutput == true) //for cart page
-    {
-        echo "<tr><td/><td/><td/><td class=\"cost-label\">Subtotal:</td><td class=\"cost-sum\">$" . number_format($subtotal, 2) . "</td></tr>";
-        echo "<tr><td/><td/><td/><td class=\"cost-label\">Shipping:</td><td class=\"cost-sum\">$" . number_format($shipping, 2) . "</td></tr>";
-        echo "<tr><td/><td/><td/><td class=\"cost-label\">Total:</td><td class=\"cost-sum\">$" . number_format($total, 2) . "</td></tr>";
-    }
-    else //for order summary pages (i.e. checkout, invoice lookup) (has alternate spacing)
-    {
-        echo "<tr><td/><td class=\"cost-label\">Subtotal:</td><td class=\"cost-sum\">$" . number_format($subtotal, 2) . "</td></tr>";
-        echo "<tr><td/><td class=\"cost-label\">Shipping:</td><td class=\"cost-sum\">$" . number_format($shipping, 2) . "</td></tr>";
-        echo "<tr><td/><td class=\"cost-label\">Total:</td><td class=\"cost-sum\">$" . number_format($total, 2) . "</td></tr>";
-    }
+    echo "<div class=\"total-summary\">";
 
-    echo "</table>";
+    echo "<div class=\"sum-row\">";
+    echo "<p class=\"cost-label\">Subtotal:</p>";
+    echo "<p class=\"cost-sum\">$" . number_format($subtotal, 2) . "</p>";
+    echo "</div>";
+
+    echo "<div class=\"sum-row\">";
+    echo "<p class=\"cost-label\">Shipping:</p>";
+    echo "<p class=\"cost-sum\">$" . number_format($shipping, 2) . "</p>";
+    echo "</div>";
+
+    echo "<div class=\"sum-row\">";
+    echo "<p class=\"cost-label\">Total:</p>";
+    echo "<p class=\"cost-sum\">$" . number_format($total, 2) . "</p>";
+    echo "</div>";
+
+    echo "</div>";
 }
 
 function getCartContents($rs, $database, $legacyDB)
