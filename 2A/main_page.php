@@ -111,15 +111,17 @@
                                 /*checks that both needed variables are provided and valid*/
                                 if($productID && $quantity > 0) {
 
-                                    /*checks if user is logged in so that we know whether to use userAccID or userID when adding and updating*/
-                                    if($_SESSION['logged_in'] == true) {
-                                        /*first check if the item being added into the cart is already in there, if it is we update quantity instead
-                                          of adding multiples of an item in the cart*/
-                                        $pQuery = $database->prepare("SELECT * FROM CustomerCart WHERE userAccID = :userAccID AND productID = :productID");
-                                        $pQuery->bindParam(':userAccID', $_SESSION['userID'], PDO::PARAM_INT);
-                                        $pQuery->bindParam(':productID', $productID, PDO::PARAM_INT);
-                                        $pQuery->execute();
-                                        $pResult = $pQuery->fetch(PDO::FETCH_ASSOC);
+                                  if(isValidQuantity($database, $productID, $quantity) == true) {
+
+                                        /*checks if user is logged in so that we know whether to use userAccID or userID when adding and updating*/
+                                        if($_SESSION['logged_in'] == true) {
+                                            /*first check if the item being added into the cart is already in there, if it is we update quantity instead
+                                              of adding multiples of an item in the cart*/
+                                            $pQuery = $database->prepare("SELECT * FROM CustomerCart WHERE userAccID = :userAccID AND productID = :productID");
+                                            $pQuery->bindParam(':userAccID', $_SESSION['userID'], PDO::PARAM_INT);
+                                            $pQuery->bindParam(':productID', $productID, PDO::PARAM_INT);
+                                            $pQuery->execute();
+                                            $pResult = $pQuery->fetch(PDO::FETCH_ASSOC);
 
                                         /*if item is not already in the cart, then INSERT is used*/
                                         if(!$pResult) {
@@ -197,6 +199,9 @@
                                             }
                                        }
                                    }
+                                  } else {
+                                        echo "Item is unavailable";
+                                  }
                                 } else {
                                     echo "Something went wrong, please try again!";
                                 }
