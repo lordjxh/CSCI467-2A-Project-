@@ -7,10 +7,10 @@
     </head>
     <body>
         <header>
-            <div>
+            <nav>
                 <a href="main_page.php">Home</a>
                 <a href="esignon_page.php">Employee Login</a>
-            </div>
+            </nav>
         </header>
         <main>
             <h1>Login</h1>
