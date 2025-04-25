@@ -13,7 +13,7 @@
             </nav>
         </header>
         <main>
-            <h1>Login</h1>
+            <h2>Login</h2>
             <!--User Login Data Entry -->
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <label for="login_email">Email:</label>
