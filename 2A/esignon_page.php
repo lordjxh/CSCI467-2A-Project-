@@ -77,14 +77,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
-
+	
+<h1>Warehouse Employee Login Portal</h1>
+	
 <nav>
-	<a href=>Home</a>
-	<a href=>Sign-In</a>
-	<a href=>Cart</a>
+	<a href=main_page.php>Home</a>
+	<a href=signon_page.php>Sign-In</a>
+	<a href=cart.php>Cart</a>
 </nav>
 
-<h2>Warehouse Employee Login</h2>
 <form method="post" action="">
     <label for="userID">User ID:</label>
     <input type="text" name="userID" id="userID" required>
