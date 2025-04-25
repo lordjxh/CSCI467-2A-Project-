@@ -7,37 +7,35 @@
     </head>
     <body>
         <header>
-            <div>
+            <nav>
                 <a href="main_page.php">Home</a>
                 <a href="esignon_page.php">Employee Login</a>
                 <a href="cart.php">Cart</a>
-            </div>
+            </nav>
         </header>
         <main>
-            <h1>Create an account</h1>
+            <h2>Create an account</h2>
             <!-- User Sign-up Data Entry -->
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                <h3> Contact Information</h3>
                 <label for="firstName">First name:</label>
                 <input type="text" id="firstName" name="firstName" required>
-                <br>
                 <label for="last">Last name:</label>
                 <input type="text" id="lastName" name="lastName" required>
-                <br>
-                <label for="address">Shipping address:</label>
-                <input type="text" id="address" name="address" required>
-                <br>
-                <label for="state">State:</label>
-                <input type="text" id="state" name="state" maxlength="2" required>
-                <br>
-                <label for="city">City:</label>
-                <input type="text" id="city" name="city" required>
-                <br>
-                <label for="zipcode">Zip code:</label>
-                <input type="text" id="zipcode" name="zipcode" required>
-                <br>
                 <label for="phoneNum">Phone number:</label>
                 <input type="text" id="phoneNum" name="phoneNum" required>
                 <br>
+                <h3> Shipping Address </h3>
+                <label for="address">Street address:</label>
+                <input type="text" id="address" name="address" required>
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" maxlength="2" required>
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required>
+                <label for="zipcode">Zip code:</label>
+                <input type="text" id="zipcode" name="zipcode" required>
+                <br>
+                <h3> Create account login </h3>
                 <label for="signup__email">Email:</label>
                 <input type="email" id="signup_email" name="signup_email" required>
                 <br>
