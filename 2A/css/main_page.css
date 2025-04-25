@@ -1,6 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    padding:20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+nav {
+    background-color: #808080;
+    overflow: hidden;
+    opacity: .6;
+}
+
+nav a {
+    float: left;
+    display: block;
+    color: #000000;
+    text-align: center;
+    padding: 14px 16px;
+}
+
+td {
+    border:1px solid #ccc;
+    border-radius: 4px;
+    text-align:left;
+    padding: 10px;
+}
+
 table {
-   text-align:center;
-   border: 1px solid black;
+    text-align:center;
+    padding: 20px;
+    margin-bottom: 40px;
+    width: 100%;
 }
 
 .center {
@@ -8,19 +40,11 @@ table {
    margin-right: auto;
 }
 
-.navbar {
-   overflow: hidden;
-}
-
-.navbar a {
-   float: left;
-   display: block;
-   text-align: center;
-   padding: 14px 16px;
-}
-
 #table-scroll {
    overflow:auto;
    height:500px;
    margin-top:20px;
+   border: 1px solid #ccc;
+   border-radius: 8px;
 }
+
