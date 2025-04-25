@@ -131,9 +131,9 @@ if (isset($_POST['update_payment'])) {
 <h1>Returning User Dashboard</h1>
 
 <nav>
-	<a href=>Home</a>
-	<a href=>Staff</a>
-	<a href=>Cart</a>
+	<a href=main_page.php>Home</a>
+	<a href=esignon_page.php>Staff</a>
+	<a href=cart.php>Cart</a>
 </nav>
 <div style="margin-top: 30px;"></div>
 
