@@ -28,17 +28,41 @@
 
         if (isset($_POST['increase']))
         {
-            $changeStatement = "UPDATE CustomerCart SET quantity = " . ($originalQuantity + 1) . " WHERE UserAccID = " . $_SESSION['userID'] . " AND ProductID = " . $productID . ";";
+            if($_SESSION['logged_in'] == true)
+            {
+                $changeStatement = "UPDATE CustomerCart SET quantity = " . ($originalQuantity + 1) . " WHERE userAccID = " . $_SESSION['userID'] . " AND ProductID = " . $productID . ";";
+            }
+            else
+            {
+                $changeStatement = "UPDATE CustomerCart SET quantity = " . ($originalQuantity + 1) . " WHERE userID = " . $_SESSION['userID'] . " AND ProductID = " . $productID . ";";
+            }
+
             updateDatabaseValue($database, $changeStatement);
         }
         else if($originalQuantity - 1 <= 0 || isset($_POST['remove']))
         {
-            $removeStatement = "DELETE FROM CustomerCart WHERE ProductID = " . $productID . " AND UserAccID = " . $_SESSION['userID'] . ";";
+            if($_SESSION['logged_in'] == true)
+            {
+                $removeStatement = "DELETE FROM CustomerCart WHERE ProductID = " . $productID . " AND userAccID = " . $_SESSION['userID'] . ";";
+            }
+            else
+            {
+                $removeStatement = "DELETE FROM CustomerCart WHERE ProductID = " . $productID . " AND userID = " . $_SESSION['userID'] . ";";
+            }
+
             updateDatabaseValue($database, $removeStatement);
         }
         else if (isset($_POST['decrease']))
         {
-            $changeStatement = "UPDATE CustomerCart SET quantity = " . ($originalQuantity - 1) . " WHERE UserAccID = " . $_SESSION['userID'] . " AND ProductID = " . $productID . ";";
+            if($_SESSION['logged_in'] == true)
+            {
+                $changeStatement = "UPDATE CustomerCart SET quantity = " . ($originalQuantity - 1) . " WHERE userAccID = " . $_SESSION['userID'] . " AND ProductID = " . $productID . ";";
+            }
+            else
+            {
+                $changeStatement = "UPDATE CustomerCart SET quantity = " . ($originalQuantity - 1) . " WHERE userID = " . $_SESSION['userID'] . " AND ProductID = " . $productID . ";";
+            }
+
             updateDatabaseValue($database, $changeStatement);
         }
     }
