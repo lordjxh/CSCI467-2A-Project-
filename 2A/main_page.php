@@ -3,6 +3,7 @@
 
     /*includes necessary functions*/
     include "secrets.php";
+    include "php_functions/cart_functions.php";
     include "php_functions/database_functions.php";
     include "php_functions/user_functions.php";
 
