@@ -111,70 +111,46 @@
 
                                   if(isValidQuantity($database, $productID, $quantity) == true) {
 
-                                        /*checks if user is logged in so that we know whether to use userAccID or userID when adding and updating*/
-                                        if($_SESSION['logged_in'] == true) {
-                                            /*first check if the item being added into the cart is already in there, if it is we update quantity instead
-                                              of adding multiples of an item in the cart*/
-                                            $pQuery = $database->prepare("SELECT * FROM CustomerCart WHERE userAccID = :userAccID AND productID = :productID");
-                                            $pQuery->bindParam(':userAccID', $_SESSION['userID'], PDO::PARAM_INT);
-                                            $pQuery->bindParam(':productID', $productID, PDO::PARAM_INT);
-                                            $pQuery->execute();
-                                            $pResult = $pQuery->fetch(PDO::FETCH_ASSOC);
+                                    /*checks if user is logged in so that we know whether to use userAccID or userID when adding and updating*/
+                                    if($_SESSION['logged_in'] == true) {
+                                        /*first check if the item being added into the cart is already in there, if it is we update quantity instead
+                                         of adding multiples of an item in the cart*/
+                                        $pQuery = $database->prepare("SELECT * FROM CustomerCart WHERE userAccID = " . $_SESSION['userID'] . " AND productID = " . $productID);
+                                        $pQuery->execute();
+                                        $pResult = $pQuery->fetch(PDO::FETCH_ASSOC);
 
                                         /*if item is not already in the cart, then INSERT is used*/
                                         if(!$pResult) {
-                                            $add = $database->prepare("INSERT INTO CustomerCart(productID, userAccID, quantity) VALUES (:productID, :userAccID, :quantity)");
-                                            $add->bindParam(':productID', $productID, PDO::PARAM_INT);
-                                            $add->bindParam(':userAccID', $_SESSION['userID'], PDO::PARAM_INT);
-                                            $add->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-
-                                            if(!$add->execute()) {
-                                                echo "Failed to add item to cart!";
-                                            } 
+                                            $add = "INSERT INTO CustomerCart(productID, userAccID, quantity) VALUES (" . $productID . "," . $_SESSION['userID'] . "," . $quantity . ");";
+                                            insertDatabaseValue($database, $add); 
                                         /*else UPDATE is used*/
                                         } else {
-                                        $update = $database->prepare("UPDATE CustomerCart SET quantity = quantity + :quantity WHERE productID = :productID AND userAccID = :userAccID");
-                                            $update->bindParam(':productID', $productID, PDO::PARAM_INT);
-                                            $update->bindParam(':userAccID', $_SESSION['userID'], PDO::PARAM_INT);
-                                            $update->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-
-                                            if(!$update->execute()) {
-                                                echo "Failed to add item to cart!";
-                                            } 
+                                            $update = "UPDATE CustomerCart SET quantity = quantity + " . $quantity . " WHERE productID = " . $productID . " AND userAccID = " . $_SESSION['userID'];
+                                            updateDatabaseValue($database, $update);
                                        }
                                     /*if the user is not logged in, then the above is repeated, except userID is used instead of userAccID*/
                                     } else {
                                         /*first see if item is already in the cart*/
-                                        $pQuery = $database->prepare("SELECT * FROM CustomerCart WHERE userID = :userID AND productID = :productID");
-                                        $pQuery->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_INT);
-                                        $pQuery->bindParam(':productID', $productID, PDO::PARAM_INT);
+                                        $pQuery = $database->prepare("SELECT * FROM CustomerCart WHERE userID = " . $_SESSION['userID'] . " AND productID = " . $productID);
                                         $pQuery->execute();
                                         $pResult = $pQuery->fetch(PDO::FETCH_ASSOC);
 
                                         /*if not in cart, INSERT into CustomerCart*/
                                         if(!$pResult) {
-                                            $add = $database->prepare("INSERT INTO CustomerCart(productID, userID, quantity) VALUES (:productID, :userID, :quantity)");
-                                            $add->bindParam(':productID', $productID, PDO::PARAM_INT);
-                                            $add->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_INT);
-                                            $add->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-
-                                            if(!$add->execute()) {
-                                                echo "Failed to add item to cart!";
-                                            }
+                                            $add = "INSERT INTO CustomerCart(productID, userID, quantity) VALUES (" . $productID . "," . $_SESSION['userID'] . "," . $quantity . ");";
+                                            insertDatabaseValue($database, $add);
                                         /*update cart if item is already in the cart*/
                                         } else {
-                                            $update = $database->prepare("UPDATE CustomerCart SET quantity = quantity + :quantity WHERE productID = :productID AND userID = :userID");
-                                            $update->bindParam(':productID', $productID, PDO::PARAM_INT);
-                                            $update->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_INT);
-                                            $update->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-
-                                            if(!$update->execute()) {
-                                                echo "Failed to add item to cart!";
-                                            }
-                                       }
+                                            $update = "UPDATE CustomerCart SET quantity = quantity + " . $quantity . " WHERE productID = " . $productID . " AND userID = " . $_SESSION['userID'];
+                                            updateDatabaseValue($database, $update);
+                                        }
                                    }
                                   } else {
-                                        echo "Item is unavailable";
+                                        ?>
+                                        /*shows an alert to the user if the item they want to buy is out of stock*/
+                                        <script>
+                                            alert('This item is currently unavailable, please try again later!');
+                                        </script> <?php
                                   }
                                 } else {
                                     echo "Something went wrong, please try again!";
