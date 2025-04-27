@@ -1,3 +1,12 @@
+<!-- 
+    Group 2A - CSCI 467 Spring 2025
+    checkout.php - The front-end for the checkout process. Should only be accessed if a cart is found and has valid quantities. Allows users to
+        enter their shipping and billing information, as well as payment info. Calls a CC API to validate payment information, then begins to
+        populate respective tables of information while migrating items in 'CustomerCart' to 'Purchases' for long-term storage. Upon successful
+        checkout, redirects the user to checkout_confirmation.php with a valid invoice number for later reference.
+
+-->
+
 <?php
     include "secrets.php";
     include "php_functions/database_functions.php";
@@ -82,21 +91,6 @@
             //move purchased items from CustomerCart to Purchases table, and update inventory
             processPurchases($_SESSION['userID'], $_SESSION['logged_in'], $invoiceID, $database);
             
-            //if($_POST['storeShipping'] == true)
-            //{
-                //storeUserShipping();
-            //}
-
-            //if($_POST['storeBilling'] == true)
-            //{
-                //storeUserBilling();
-            //}
-
-            //if($_POST['storeCard'] == true)
-            //{
-                //storeUserCard();
-            //}
-            
             //store invoiceID into $_SESSION variable for usage on next page
             $_SESSION['invoiceID'] = $invoiceID;
 
@@ -107,9 +101,15 @@
     }
 ?>
 
+<!-- Start of HTML Block -->
+
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/checkout.css">
+        <link rel="icon" type="image/x-icon" href="img/wrench.png">
+        <title> Checkout </title>
         <script> var currentTab = 0; </script>
     </head>
     <body>
@@ -223,7 +223,7 @@
                                 //print cart contents as summary view
                                 if(isCartEmpty($_SESSION['cart']) == false)
                                 {
-                                    printCart($_SESSION['cart'], $database, false);
+                                    printCart($_SESSION['cart'], false);
                                     printTotals($_SESSION['cart'], $database);
                                 }
                                 else

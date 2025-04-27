@@ -1,3 +1,11 @@
+<!-- 
+    Group 2A - CSCI 467 Spring 2025
+    cart.php - The front-end for a user's shopping cart. Shows items that are added from the main page. Also allows user to modify their
+        quantity amounts, and remove items. Checks if quantities are valid, and flags invalid items and prevents proceeding with
+        checkout until amounts are fixed.
+
+-->
+
 <?php
     include "secrets.php";
     include "php_functions/user_functions.php";
@@ -5,7 +13,8 @@
     include "php_functions/cart_functions.php";
 
     session_start();
-                
+          
+    //establish connection(s) to database(s)
     $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
     $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
             
@@ -16,17 +25,13 @@
         $_SESSION['logged_in'] = false;
     }
 
-    //forces usage of ID 10022 for testing purposes (remove when finalizing project)
-    //$_SESSION['userID'] = 10022;
-    //$_SESSION['logged_in'] = true;
-
     //handles changes to a cart item upon form submissions
     if ($_SERVER['REQUEST_METHOD'] == 'POST') 
     {
         $originalQuantity = $_POST['quantity'];
         $productID = $_POST['productID'];
 
-        if (isset($_POST['increase']))
+        if (isset($_POST['increase'])) //handles increasing the quantity of an item
         {
             if($_SESSION['logged_in'] == true)
             {
@@ -39,7 +44,7 @@
 
             updateDatabaseValue($database, $changeStatement);
         }
-        else if($originalQuantity - 1 <= 0 || isset($_POST['remove']))
+        else if($originalQuantity - 1 <= 0 || isset($_POST['remove'])) //handles removing an item from the cart
         {
             if($_SESSION['logged_in'] == true)
             {
@@ -52,7 +57,7 @@
 
             updateDatabaseValue($database, $removeStatement);
         }
-        else if (isset($_POST['decrease']))
+        else if (isset($_POST['decrease'])) //handles decreasing the quantity of an item
         {
             if($_SESSION['logged_in'] == true)
             {
@@ -83,9 +88,15 @@
     $_SESSION['cart'] = $cartItems; //force cart contents to session variable
 ?>
 
+<!-- Start of HTML Block -->
+
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/cart.css">
+        <link rel="icon" type="image/x-icon" href="img/wrench.png">
+        <title> Cart </title>
     </head>
     <body>
         <p class="user-message"><a href="ru_page.php" id="UserID" name="UserID" placeholder="Log In"><?php setLogOnAttributeValue($database) ?></a></p>
@@ -105,7 +116,7 @@
                     {
                         if($cartItems != NULL)
                         {
-                            printCart($cartItems, $database, true);
+                            printCart($cartItems, true);
                             printTotals($cartItems, $database);
                         }
                         else
