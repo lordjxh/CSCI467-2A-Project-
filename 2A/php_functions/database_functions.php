@@ -1,5 +1,8 @@
 <?php
-//This file is a series of PHP functions that can work with the PDO object and databases.
+//Group 2A - CSCI467 Spring 2025
+//database_functions - a PHP file for all functions that can work with the PDO object and databases. Serves as an
+//alternative use case to clean up code on individual pages.
+
 
 //establishDB() - creates a $PDO object conection to a database server
 //inputs -
@@ -16,8 +19,8 @@ function establishDB($dsn, $username, $password)
         return $pdo;
     }
     catch(PDOexception $error){ //handles exception(s)
-        echo "Connection to DB failed" . $error->getMessage();
-        return false;
+        http_response_code(401);
+        die("Connection to DB failed: " . $error->getMessage());
     }
 }
 
@@ -46,8 +49,8 @@ function insertDatabaseValue($pdo, $statement)
     }
     catch (PDOException $error) 
     {
-        echo "ERROR: " . $error->getMessage();
-        die();
+        http_response_code(401);
+        die("Database insertion failed: " . $error->getMessage());
     }
 }
 
@@ -65,8 +68,8 @@ function deleteDatabaseValue($pdo, $statement)
     }
     catch (PDOException $error) 
     {
-        echo "ERROR: " . $error->getMessage();
-        die();
+        http_response_code(401);
+        die("Database deletion failed: " . $error->getMessage());
     }
 }
 
@@ -83,7 +86,8 @@ function updateDatabaseValue($pdo, $statement)
     }
     catch(PDOException $error)
     {
-        echo "ERROR: " . $error->getMessage();
+        http_response_code(401);
+        die("Database update failed: " . $error->getMessage());
     }
 }
 
@@ -101,7 +105,7 @@ function extractSingleValue($rs)
         }
     }
 
-    echo "ERROR: Failed to extract value";
+    //if this point is reached, the value failed to extract, so return null
     return null;
 }
 

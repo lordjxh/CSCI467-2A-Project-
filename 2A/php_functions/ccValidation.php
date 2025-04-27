@@ -1,5 +1,7 @@
 <?php
-//This file handles the credit card validation during the checkout process. It requires all form values to be filled.
+//Group 2A - CSCI467 Spring 2025
+//ccValidation - This file handles the credit card validation during the checkout process. It requires all 
+//form values to be filled. It is used by checkout.php.
 
 //Global variables. Several rely on $_POST from checkout.php to set.
 
@@ -13,7 +15,7 @@ $amount = $_POST['amount'];
 
 //validateCC() - modified from project instructions, calls a card validation API to determine if the provided
 //user card is valid.
-//input(s) - none
+//inputs - none
 //output - String of JSON pulled from API
 function validateCC() {
     global $vendor, $trans_formatted, $cc, $name, $exp, $amount;
@@ -43,7 +45,7 @@ function validateCC() {
 
 //validateCheckout() - upon user checkout, this function takes user input, formats into an accepted input for
 //the card validation API, and then calls validateCC() to get and decode JSON.
-//input(s) - none; expects global variables to be set prior
+//inputs - none; expects global variables to be set prior
 //output - array of decoded JSON
 function validateCheckout()
 {
@@ -77,7 +79,7 @@ function validateCheckout()
 
 //debugPrintCCOutput() - for debug purposes only, will print the contents of user input as it would
 //be stored into the validateCC() function call to the card validation API
-//input(s) - none
+//inputs - none
 //output - prints to front-end
 function debugPrintCCOutput()
 {

@@ -1,12 +1,12 @@
 <?php
+//Group 2A - CSCI467 Spring 2025
+//user_functions - a PHP file for functions used regarding user details such as sign-on or assigning an ID.
+//It is dependent on database_functions.php and $_SESSION to operate.
 
-//
-// This file is a series of functions used regarding user details such as sign-on or assign an ID.
-// It is dependent on database_functions.php and $_SESSION to operate.
 
 //assignUserID() - for guest users, will create a userID from the Users table, separate from UserAcc.
 //Inputs -
-    //$database - the connected database to query
+    //$database - the PDO object with a valid database connected
 //Output - the ID of the last created User value
 function assignUserID($database)
 {
@@ -18,11 +18,11 @@ function assignUserID($database)
     return $userID;
 }
 
-//setLogOnAttributeValue - should be used with the following HTML element on most pages:
+//setLogOnAttributeValue() - should be used with the following HTML element on most pages:
 //  "<p><a href="" id="UserID" name="UserID" placeholder="Log In">*FUNCTION_CALL_HERE</a></p>"
 //and will add appropriate text to the element. Be sure to update CSS as well.
 //Inputs -
-    //$database - the connected database to query, passed to another function
+    //$database - the PDO object with a valid database connected, passed to another function
 //Output - Updates element value.
 function setLogOnAttributeValue($database)
 {
