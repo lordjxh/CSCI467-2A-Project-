@@ -26,8 +26,11 @@ function assignUserID($database)
 //Output - Updates element value.
 function setLogOnAttributeValue($database)
 {
+    echo "<p class=\"user-message\">";
+
     if($_SESSION['logged_in'] == true)
     {
+        echo "<a href=\"ru_page.php\" id=\"UserID\" name=\"UserID\">";
         $statement = "SELECT firstName FROM UserAccount WHERE userID = " . $_SESSION['userID'] . ";";
         $rs = getSQL($database, $statement);
         $name = extractSingleValue($rs);
@@ -36,7 +39,10 @@ function setLogOnAttributeValue($database)
     }
     else
     {
+        echo "<a href=\"signon_page.php\" id=\"UserID\" name=\"UserID\">";
         echo "Log On";
     }
+
+    echo "</a></p>";
 }
 ?>

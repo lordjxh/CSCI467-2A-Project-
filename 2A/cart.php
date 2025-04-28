@@ -99,7 +99,7 @@
         <title> Cart </title>
     </head>
     <body>
-        <p class="user-message"><a href="ru_page.php" id="UserID" name="UserID" placeholder="Log In"><?php setLogOnAttributeValue($database) ?></a></p>
+        <?php setLogOnAttributeValue($database) ?>
         <h1>2A-CORP</h1>
         <nav>
 	        <a href="main_page.php">Home</a>
