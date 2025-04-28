@@ -54,7 +54,7 @@
     <body>
         <header>
             <nav>
-                <a href="admin_page.php" class="button"><- Go Back</a>
+                <a href="admin_page.php" class="nav-button"><- Go Back</a>
             </nav>
         </header>
         <div style="margin-top: 30px;"></div>
@@ -62,7 +62,7 @@
                 <div class="section">
                     <form id="regForm" method="post">
                         <input id="searchTerm" name="searchTerm"></input>
-                        <button type="submit" id="search" name="search">Search</button>
+                        <button type="submit" id="search" name="search" class="button">Search</button>
                         <?php
                             if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             {
@@ -75,7 +75,7 @@
                                 {
                                     if($inventoryResult != NULL)
                                     {
-                                        echo "<button type=\"submit\" id=\"modify\" name=\"modify\">Modify</button>";
+                                        echo "<button type=\"submit\" id=\"modify\" name=\"modify\" class=\"button\">Modify</button>";
                                         printInventoryItems($inventoryResult); 
                                     }
                                     else
