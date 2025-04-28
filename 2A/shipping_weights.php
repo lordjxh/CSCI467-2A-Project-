@@ -21,9 +21,21 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/x-icon" href="img/wrench.png">
+        <link rel="stylesheet" href="css/shipping_weights.css">
         <title>Shipping Weights</title>
     </head>
     <body>
-        <?php printShippingWeights($weights); ?>
+        <header>
+            <nav>
+                <a href="admin_page.php" class="button"><- Go Back</a>
+            </nav>
+        </header>
+        <div style="margin-top: 30px;"></div>
+            <div class="left">
+                <div class="section">
+                    <?php printShippingWeights($weights); ?>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
