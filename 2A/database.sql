@@ -19,6 +19,23 @@ CREATE TABLE UserAccount (
     userPassword VARCHAR(32)
 ) AUTO_INCREMENT = 10001;
 
+--Staff - for employees. Includes booleans to check for hire status, and admin permissions
+CREATE TABLE Staff (
+    staffID INT AUTO_INCREMENT PRIMARY KEY,
+    staffUserName VARCHAR(32),
+    staffFirstName VARCHAR(32),
+    staffLastName VARCHAR (32),
+    staffAddress VARCHAR(64),
+    staffCity VARCHAR(48),
+    staffState VARCHAR(2),
+    staffZipcode VARCHAR(10),
+    staffPhone VARCHAR(14),
+    staffEmail VARCHAR(30),
+    staffPassword VARCHAR(32),
+    currentEmployee BOOLEAN DEFAULT TRUE,
+    isAdmin BOOLEAN DEFAULT FALSE
+) AUTO_INCREMENT = 101;
+
 --PaymentData - an optional table for users that wish to store their payment info for faster checkout
 CREATE TABLE PaymentData (
     userID INT PRIMARY KEY,
