@@ -133,7 +133,7 @@ function debugPrintRows($rs)
 //inputs -
     //$currentDB - the new database that holds new attributes
     //$legacyDB - the legacy database to retrive items from
-//output - the 'Products' table will be amended with new entries
+//output - the 'Products' table will be amended with new entries, and a result variable is returned
 function loadLegacyProducts($currentDB, $legacyDB)
 {
     //statement to get legacy part ID's
@@ -166,6 +166,15 @@ function loadLegacyProducts($currentDB, $legacyDB)
         }
     }
 
-    echo "<br>Successfully added " . $newEntries . " based on " . $existingEntries . " existing entries.</br>";
+    if($newEntries > 0)
+    {
+        $result = "Successfully added " . $newEntries . " based on " . $existingEntries . " existing entries.";
+    }
+    else
+    {
+        $result = "No new entries to add from legacy database.";
+    }
+
+    return $result;
 }
 ?>

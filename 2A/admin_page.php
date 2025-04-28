@@ -7,6 +7,7 @@
     session_start();
     
     //establish connection(s) to database(s)
+    $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
     $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
     //for debug purposes, remove when finalizing
@@ -17,6 +18,12 @@
     {
         header("Location: esignon_page.php");
         exit();
+    }
+
+    //calls loadLegacyProducts() when called
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+    {
+        $result = loadLegacyProducts($database, $legacyDB);
     }
 ?>
 
@@ -40,8 +47,12 @@
             <div class="left">
                 <div class="section">
                     <h2>Administrator Page</h2><br/>
-                    <a class="button" href="">Invoice Lookup</a>
-                    <a class="button" href="shipping_weights.php">Modify Shipping Weights</a>
+                    <a class="button" href="">Invoice Lookup</a><br/>
+                    <a class="button" href="shipping_weights.php">Modify Shipping Weights</a><br/>
+                    <form id="regForm" method="post">
+                        <a class="button" id="callLoadLegacy" name="callLoadLegacy" onclick="document.getElementById('regForm').submit()">Add New Legacy Products</input></a>
+                    </form>
+                    <?php echo "<p>" . $result . "</p>"; ?>
                 </div>
             </div>
         </div>
