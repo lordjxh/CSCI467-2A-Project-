@@ -3,7 +3,6 @@ session_start();
 
 
 include "secrets.php";
-include "php_functions/user_functions.php";
 include "php_functions/database_functions.php";
 
 
