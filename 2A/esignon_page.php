@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'] ?? '';
 
     if (!empty($staffID) && !empty($password)) {
-       $stmt = $pdo->prepare("SELECT staffID, staffPassword, isAdmin FROM staff WHERE staffID = :staffID");
+        $stmt = $pdo->prepare("SELECT staffID, staffPassword, isAdmin FROM staff WHERE staffID = :staffID");
         $stmt->bindParam(':staffID', $staffID);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
