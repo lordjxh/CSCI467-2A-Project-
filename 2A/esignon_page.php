@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['userid'] = $user['userid'];
+            $_SESSION['userid'] = $user['userid'];   // Store userID in session
             $_SESSION['isAdmin'] = $user['isAdmin']; // Store isAdmin in session
             $_SESSION['logged_in'] = true;
 
