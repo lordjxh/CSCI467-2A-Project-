@@ -10,7 +10,7 @@
     //$userID - the user's ID used for checkout. Disregarded if the user is not registered as an account
     //$isAccount - a boolean to determine which call to the database to use based on if user is a guest
     //$cartItems - the array of items in the user's cart created from cart_functions.php
-    //$database
+    //$database - the database $pdo initialized
 //output - $invoiceID - the primary key from the created entry, a VARCHAR that identifies the order
 function processInvoice($userID, $isAccount, $cartItems, $database)
 {
