@@ -7,34 +7,35 @@ include "php_functions/database_functions.php";
 $pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $userID = $_POST['userID'] ?? '';
+    $staffID = $_POST['staffID'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    if (!empty($userID) && !empty($password)) {
-        $stmt = $pdo->prepare("SELECT userid, password, isAdmin FROM staff WHERE userid = :userid");
-        $stmt->bindParam(':userid', $userID);
+    if (!empty($staffID) && !empty($password)) {
+        $stmt = $pdo->prepare("SELECT staffID, password, isAdmin FROM staff WHERE staffID = :staffID");
+        $stmt->bindParam(':staffID', $staffID);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['userid'] = $user['userid'];   // Store userID in session
-            $_SESSION['isAdmin'] = $user['isAdmin']; // Store isAdmin in session
+            $_SESSION['staffID'] = $user['staffID'];   // Store staffID in session
+            $_SESSION['isAdmin'] = $user['isAdmin'];   // Store isAdmin in session
             $_SESSION['logged_in'] = true;
 
             // Redirect based on admin status
             if ($user['isAdmin'] == 1) {
-                header("Location: admin_page.php?userid=" . urlencode($user['userid']));
+                header("Location: admin_page.php?staffID=" . urlencode($user['staffID']));
             } else {
-                header("Location: wh_page.php?userid=" . urlencode($user['userid']));
+                header("Location: wh_page.php?staffID=" . urlencode($user['staffID']));
             }
             exit();
         } else {
-            echo "<p style='color:red;'>Invalid user ID or password.</p>";
+            echo "<p style='color:red;'>Invalid staff ID or password.</p>";
         }
     } else {
         echo "<p style='color:red;'>Both fields are required.</p>";
     }
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -91,13 +92,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </nav>
 
 <form method="post" action="">
-    <label for="userID">User ID:</label>
-    <input type="text" name="userID" id="userID" required>
-
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" required>
-
-    <input type="submit" value="Login">
+	<label for="staffID">Staff ID:</label>
+    	<input type="text" name="staffID" id="staffID" required>
+	
+    	<label for="password">Password:</label>
+    	<input type="password" name="password" id="password" required>
+	
+    	<input type="submit" value="Login">
 </form>
 
 </body>
