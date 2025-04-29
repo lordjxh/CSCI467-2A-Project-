@@ -21,8 +21,23 @@ $pdo = establishDB($dsn, $username, $password);
 
 
 // Get all open invoices
-$sql = "SELECT invoiceNO, userID, subtotal, shippingCost, grandTotal FROM InvoiceDB WHERE fulfillmentStatus = 'N';";
-$rs = getSQL($pdo, $sql);
+
+// Handle quantity updates
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_quantities'])) {
+    foreach ($_POST['products'] as $productID => $quantities) {
+        $storeQty = intval($quantities['storeQuantity']);
+        $warehouseQty = intval($quantities['warehouseQuantity']);
+
+        $stmt = $pdo->prepare("UPDATE Products SET storeQuantity = ?, warehouseQuantity = ? WHERE productID = ?");
+        $stmt->execute([$storeQty, $warehouseQty, $productID]);
+    }
+    echo "<p style='color: green;'>Quantities updated successfully.</p>";
+}
+
+// Fetch products
+$productStmt = $pdo->query("SELECT productID, storeQuantity, warehouseQuantity, legacyID FROM Products");
+$products = $productStmt->fetchAll(PDO::FETCH_ASSOC);
+
 */
 ?>
 
@@ -30,7 +45,7 @@ $rs = getSQL($pdo, $sql);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Warehouse Portal</title>
+    <title>Receiving Desk Portal</title>
     <link rel="icon" href="wrench.png" type="image/x-icon">
     <style>
         body {
@@ -106,50 +121,43 @@ $rs = getSQL($pdo, $sql);
     </style>
 </head>
 <body>
-    
-    <h1> Warehouse Fulillment </h1>        
 
-<!-- Navigation Bar -->
+    <h1>Receiving Desk </h1>
+
+    <!-- Navigation Bar -->
     <nav>
         <a href="main_page.php">Home</a>
-        <a href="update_inv.php">Update Inventory</a>
         <a href="signout_page.php">Logout</a>
     </nav>
 
-    <h2>Open Orders</h2>
-    <p>Welcome Back, <?php echo htmlspecialchars($_SESSION['username']); ?>! Select an invoice to create a shipping label.</p>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Invoice #</th>
-                <th>User ID</th>
-                <th>Subtotal</th>
-                <th>Shipping Cost</th>
-                <th>Grand Total</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // Display each unfulfilled invoice
-            while ($invoice = $rs->fetch(PDO::FETCH_ASSOC)) {
-                echo "<tr>";
-                echo "<td>" . htmlspecialchars($invoice['invoiceNO']) . "</td>";
-                echo "<td>" . htmlspecialchars($invoice['userID']) . "</td>";
-                echo "<td>$" . number_format($invoice['subtotal'], 2) . "</td>";
-                echo "<td>$" . number_format($invoice['shippingCost'], 2) . "</td>";
-                echo "<td>$" . number_format($invoice['grandTotal'], 2) . "</td>";
-                echo "<td>";
-                echo "<form action='create_shipping_label.php' method='post' style='margin:0;'>";
-                echo "<input type='hidden' name='invoiceNO' value='" . htmlspecialchars($invoice['invoiceNO']) . "'>";
-                echo "<button type='submit'>Create Label</button>";
-                echo "</form>";
-                echo "</td>";
-                echo "</tr>";
-            }
-            ?>
-        </tbody>
+        <h2>Product Manager</h2>
+    <form method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Legacy ID</th>
+                    <th>Store Quantity</th>
+                    <th>Warehouse Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($products as $product): ?>
+                <tr>
+                    <td><?= htmlspecialchars($product['productID']) ?></td>
+                    <td><?= htmlspecialchars($product['legacyID']) ?></td>
+                    <td>
+                        <input type="number" name="products[<?= $product['productID'] ?>][storeQuantity]" value="<?= htmlspecialchars($product['storeQuantity']) ?>">
+                    </td>
+                    <td>
+                        <input type="number" name="products[<?= $product['productID'] ?>][warehouseQuantity]" value="<?= htmlspecialchars($product['warehouseQuantity']) ?>">
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <button type="submit" name="update_quantities" class="submit-btn">Update Quantities</button>
+    </form>
 
 </body>
 </html>
