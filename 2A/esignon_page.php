@@ -35,9 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<p style='color:red;'>Both fields are required.</p>";
     }
 }
-
-
 ?>
+	
 <!DOCTYPE html>
 <html>
 <head>
