@@ -21,7 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['isAdmin'] = $user['isAdmin']; // Store isAdmin in session
             $_SESSION['logged_in'] = true;
 
-            header("Location: wh_page.php?userid=" . urlencode($user['userid']));
+            // Redirect based on admin status
+            if ($user['isAdmin'] == 1) {
+                header("Location: admin_page.php?userid=" . urlencode($user['userid']));
+            } else {
+                header("Location: wh_page.php?userid=" . urlencode($user['userid']));
+            }
             exit();
         } else {
             echo "<p style='color:red;'>Invalid user ID or password.</p>";
