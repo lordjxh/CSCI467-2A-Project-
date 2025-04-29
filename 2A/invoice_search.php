@@ -4,6 +4,8 @@
           can filter through the invoices by date range, price, and order status. They can
           view the details of an order in this table as well */
 
+    session_start();
+
     /*includes necessary functions*/
     include "secrets.php";
     include "php_functions/database_functions.php";
@@ -34,32 +36,37 @@
             </nav>
         </header>
         <main>
-            <!--Buttons and input used to filter invoice search-->
-            <!--FILTER NOT FUNCTIONAL YET-->
             <h2> Filter Search of Orders </h2>
             <hr>
-            <!--Filter by Date-->
-            <h3>Order Date</h3>
-            <label for="startDate">From:</label>
-            <input type="date" id="startDate" name="startDate">
-            <label for="endDate">To:</label>
-            <input type="date" id="endDate" name="endDate">
-            <!--By status-->
-            <h3>Order Status</h3>
-            <input type="radio" id="allOrders" name="allOrders">
-            <label for="allOrders">All</label>
-            <input type="radio" id="shipped" name="shipped">
-            <label for="shipped">Shipped</label>
-            <input type="radio" id="authorized" name="authorized">
-            <label for="authorized">Authorized</label>
-            <!--Price-->
-            <h3>Price Range</h3>
-            <label for="startPrice">From:</label>
-            <input type="number" id="startPrice" name="startPrice" value="0">
-            <label for="endPrice">To:</label>
-            <input type="number" id="endPrice" name="endPrice" value="1000000">
-            <hr>
+            <!--This form takes user input to filter by date, price, and status-->
+            <form method="GET" action="invoice_search.php">
+                <!--Filter by Date-->
+                <h3>Order Date</h3>
+                <label for="startDate">From:</label>
+                <input type="date" id="startDate" name="startDate">
+                <label for="endDate">To:</label>
+                <input type="date" id="endDate" name="endDate">
 
+                <!--Dropdown selection to filter by status-->
+                <h3>Order Status</h3>
+                <select name="status" id="status">
+                    <option value="all">All</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="authorized">Authorized</option>
+                </select>
+
+                <!--Price-->
+                <h3>Price Range</h3>
+                <label for="startPrice">From:</label>
+                <input type="number" id="startPrice" name="startPrice" value="0">
+                <label for="endPrice">To:</label>
+                <input type="number" id="endPrice" name="endPrice" value="1000000">
+
+                <!--Button to apply the filter-->
+                <br>
+                <button type="submit">Apply</button>
+                <hr>
+            </form>
             <!--Handles the "Details" button and displays invoice details-->
             <?php
                 if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['details'])) {
@@ -133,10 +140,40 @@
                         <th>View Invoice</th>
                     </tr>
                     <?php
-                        /*displays all databases from InvoiceDB*/
-                        $sql = $database->prepare("SELECT * FROM InvoiceDB");
-                        $sql->execute();
-                        while($row=$sql->fetch(PDO::FETCH_ASSOC)) {
+                        /*by default, sql query selects all invoices from the db*/
+                        $sql = "SELECT * FROM InvoiceDB WHERE 1=1";
+                        $values = [];
+
+                        /*adds conditions to the sql statement if the date range is set*/
+                        if(!empty($_GET['startDate']) && !empty($_GET['endDate'])) {
+                            $sql .= " AND datePaid BETWEEN :startDate AND :endDate";
+                            $values['startDate'] = $_GET['startDate'] . ' 00:00:00';
+                            $values['endDate'] = $_GET['endDate'] . ' 23:59:59';
+                        }
+
+                        /*adds condition to the sql statement if the status filter is set*/
+                        if(isset($_GET['status']) && $_GET['status'] !== 'all') {
+                            if($_GET['status'] == "shipped") {
+                                $sql .= " AND fulfillmentStatus = 'Y'";
+                            } else {
+                                $sql .= " AND fulfillmentStatus = 'N'";
+                            }
+                        }
+
+                        /*adds condition to the sql statement if the price range is set*/
+                        if(isset($_GET['startPrice']) && !empty($_GET['endPrice'])) {
+                            $sql .= " AND grandTotal BETWEEN " . $_GET['startPrice'] . " AND " . $_GET['endPrice'];
+                        }
+
+                        $query = $database->prepare($sql);
+                        /*binds filter values to the query to be executed*/
+                        foreach($values as $key => $value) {
+                            $query->bindValue(":$key", $value);
+                        }
+
+                        $query->execute();
+                        /*displays the table of invoices based on updated query*/
+                        while($row=$query->fetch(PDO::FETCH_ASSOC)) {
                     ?>
                     <tr>
                         <td> <?php echo $row['invoiceNO']; ?> </td>
@@ -144,6 +181,7 @@
                         <td> <?php echo $row['datePaid']; ?> </td>
                         <td> $<?php echo $row['grandTotal']; ?> </td>
                         <td>
+                            <!--This form provides a button for the admin to view the details of a selected invoice-->
                             <form action="invoice_search.php" method="POST">
                                 <input type="hidden" name="invoiceID" value="<?php echo $row['invoiceNO']; ?>">
                                 <input type="submit" id="details" name="details" value="Details" style="width:60px">
