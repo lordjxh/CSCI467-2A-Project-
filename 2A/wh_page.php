@@ -112,7 +112,7 @@ $rs = getSQL($pdo, $sql);
 <!-- Navigation Bar -->
     <nav>
         <a href="main_page.php">Home</a>
-        <a href="update_inv.php">Update Inventory</a>
+        <a href="inventory_management.php">Update Inventory</a>
         <a href="signout_page.php">Logout</a>
     </nav>
 
