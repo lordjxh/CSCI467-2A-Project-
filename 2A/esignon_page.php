@@ -1,13 +1,10 @@
 <?php
 session_start();
-//require_once("database_functions.php");
 
-// Replace prior to runtime
-//$dsn = "";
-//$dbUser = "";
-//$dbPass = "";
+include "secrets.php";
+include "php_functions/database_functions.php";
 
-//$pdo = establishDB($dsn, $dbUser, $dbPass);
+$pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userID = $_POST['userID'] ?? '';
