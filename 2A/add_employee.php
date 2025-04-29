@@ -27,23 +27,30 @@
     {
         $result = addNewEmployee($database);
 
-        if($result == 0)
+        if($result == 0) //if $result is zero, the employee was added successfully
         {
             $isAdded = true;
             $message = "Successfully added employee.";
         }
-        else if($result == 1)
+        else if($result == 1) //else if $result is one, an input value was missing
         {
             $isAdded = false;
             $message = "Failed to add employee: one or more required value was missing.";
         }
-        else if($result == 2)
+        else if($result == 2) //else if $result is two, the username was already taken by another employee
         {
             $isAdded = false;
             $message = "Failed to add employee: username was already taken.";
         }
+        else //all else, an unexpected error occurred when adding the employee
+        {
+            $isAdded = false;
+            $message = "An unknown issue occurred when attempting to add employee. Please try again.";
+        }
     }
 ?>
+
+<!-- Start of HTML Block -->
 
 <html>
     <head>
