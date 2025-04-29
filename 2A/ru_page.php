@@ -2,15 +2,17 @@
 // Start a new or resume an existing session
 session_start();
 
-// Include database connection and logic file (commented out here for reference)
-// include "database_calls.php"
+include "secrets.php";
+include "php_functions/database_functions.php";
 
-// --- DB Connection and Logic Section ---
-// Placeholders for database connection credentials
-// $dsn = "";
-// $username = "";
-// $password = "";
-// $pdo = establishDB($dsn, $username, $password);
+// Check login status
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header('Location: signon_page.php');
+    exit();
+}
+
+// Connect to database
+$pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
 // Retrieve userID either from GET parameters, session, or set as null if missing
 $userID = $_GET['userID'] ?? $_SESSION['userID'] ?? null;
