@@ -75,4 +75,55 @@ function printShippingWeights($weights)
     echo "<button type=\"submit\" id=\"update\" name=\"update\" class=\"button\">Update</button>";
     echo "</form>";
 }
+
+//addNewEmployee() - called from add_employee.php, will take $_POST values after submission and validate input. If successful, adds a new
+//employee into the 'Staff' table.
+//inputs -
+    //$database - the database $pdo initialized
+//output - inserts new value into 'Staff' table if successful, returns an int value based on result (0, 1, or 2)
+function addNewEmployee($database)
+{
+    //
+    //Step 1- retrieve values and store into local array
+
+    $employee[0] = $_POST['firstName'];
+    $employee[1] = $_POST['lastName'];
+    $employee[2] = $_POST['address'];
+    $employee[3] = $_POST['city'];
+    $employee[4] = $_POST['state'];
+    $employee[5] = $_POST['zipcode'];
+    $employee[6] = $_POST['email'];
+    $employee[7] = $_POST['phone'];
+    $employee[8] = $_POST['username'];
+    $employee[9] = $_POST['password'];
+
+    //
+    //Step 2 - validate entries
+    for($c = 0; $c < 10; $c++)
+    {
+        if($employee[$c] == "") //if value is blank, return error 1 for missing
+        {
+            return 1;
+        }
+    }
+
+    $statement = "SELECT staffID FROM Staff WHERE staffUserName = '" . $employee[8] . "';";
+    $rs = getSQL($database, $statement);
+    $userTaken = extractSingleValue($rs);
+
+    if($userTaken != NULL) //if at least one value is found, return error 2 for taken username
+    {
+        return 2;
+    }
+
+    //
+    //Step 3 - Add new employee to table
+
+    $statement2 = "INSERT INTO Staff(staffUserName, staffFirstname, staffLastName, staffAddress, staffCity, staffState, staffZipcode, staffPhone, staffEmail, staffPassword) VALUES ('" .
+        $employee[8] . "', '" . $employee[0] . "', '" . $employee[1] . "', '" . $employee[2] . "', '" . $employee[3] . "', '" . $employee[4] . "', '" . $employee[5] . "', '" . $employee[7] . "', '" . $employee[6] . "', '" . $employee[9] . "');";
+
+    insertDatabaseValue($database, $statement2);
+
+    return 0;
+}
 ?>
