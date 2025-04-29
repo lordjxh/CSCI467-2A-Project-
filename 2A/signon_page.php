@@ -31,7 +31,7 @@
                 session_start();
 
                 include "secrets.php";
-                include "database_functions.php";
+                include "php_functions/database_functions.php";
 
                 /*connect to database*/
                 $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
