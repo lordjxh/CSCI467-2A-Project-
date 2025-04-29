@@ -3,7 +3,7 @@ session_start();
 
 /*
 // Check login status
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] !== true) {
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header('Location: esignon_page.php');
     exit();
 }
