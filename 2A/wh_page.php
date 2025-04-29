@@ -1,29 +1,26 @@
 <?php
 session_start();
 
-/*
+
+include "secrets.php";
+include "php_functions/user_functions.php";
+include "php_functions/database_functions.php";
+
+
 // Check login status
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header('Location: esignon_page.php');
     exit();
 }
 
-// Load database functions
-require_once 'database_functions.php';
-
-// Database connection info
-$dsn = ""; 
-$username = ""; 
-$password = ""; 
-
 // Connect to database
-$pdo = establishDB($dsn, $username, $password);
+$pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
 
 // Get all open invoices
 $sql = "SELECT invoiceNO, userID, subtotal, shippingCost, grandTotal FROM InvoiceDB WHERE fulfillmentStatus = 'N';";
 $rs = getSQL($pdo, $sql);
-*/
+
 ?>
 
 <!DOCTYPE html>
