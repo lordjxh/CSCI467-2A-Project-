@@ -12,9 +12,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 require_once 'database_functions.php';
 
 // Database connection info
-$dsn = ""; // Change 'your_database'
-$username = ""; // Change this
-$password = ""; // Change this
+$dsn = ""; 
+$username = ""; 
+$password = ""; 
 
 // Connect to database
 $pdo = establishDB($dsn, $username, $password);
