@@ -147,7 +147,7 @@
                                    }
                                   } else {
                                         ?>
-                                        /*shows an alert to the user if the item they want to buy is out of stock*/
+                                        <!--shows an alert to the user if the item they want to buy is out of stock-->
                                         <script>
                                             alert('This item is currently unavailable, please try again later!');
                                         </script> <?php
