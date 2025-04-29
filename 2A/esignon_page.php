@@ -14,24 +14,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'] ?? '';
 
     if (!empty($userID) && !empty($password)) {
-        $stmt = $pdo->prepare("SELECT userid, password FROM staff WHERE userid = :userid");
+        $stmt = $pdo->prepare("SELECT userid, password, isAdmin FROM staff WHERE userid = :userid");
         $stmt->bindParam(':userid', $userID);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        //upon successful signin redirect to warehouse landing page and pass along userID
-
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['userid'] = $user['userid'];
+            $_SESSION['isAdmin'] = $user['isAdmin']; // Store isAdmin in session
+            $_SESSION['logged_in'] = true;
+
             header("Location: wh_page.php?userid=" . urlencode($user['userid']));
             exit();
-        } else {    
+        } else {
             echo "<p style='color:red;'>Invalid user ID or password.</p>";
         }
     } else {
         echo "<p style='color:red;'>Both fields are required.</p>";
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html>
