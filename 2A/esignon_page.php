@@ -11,12 +11,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'] ?? '';
 
     if (!empty($staffID) && !empty($password)) {
-        $stmt = $pdo->prepare("SELECT staffID, password, isAdmin FROM staff WHERE staffID = :staffID");
+       $stmt = $pdo->prepare("SELECT staffID, staffPassword, isAdmin FROM staff WHERE staffID = :staffID");
         $stmt->bindParam(':staffID', $staffID);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user['staffPassword'])) {
             $_SESSION['staffID'] = $user['staffID'];   // Store staffID in session
             $_SESSION['isAdmin'] = $user['isAdmin'];   // Store isAdmin in session
             $_SESSION['logged_in'] = true;
