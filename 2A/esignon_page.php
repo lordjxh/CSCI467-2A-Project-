@@ -95,6 +95,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	<a href=cart.php>Cart</a>
 </nav>
 
+<h2>Login</h2>
+	
 <form method="post" action="">
 	<label for="staffID">Staff ID:</label>
     	<input type="text" name="staffID" id="staffID" required>
