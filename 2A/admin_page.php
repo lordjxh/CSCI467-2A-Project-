@@ -18,9 +18,6 @@
     $legacyDB = establishDB($legacyHost, $legacyUsername, $legacyPassword);
     $database = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
-    //for debug purposes, remove when finalizing
-    $_SESSION['isAdmin'] = true;
-
     //if the user is not logged in as an admin, redirect to admin login
     if($_SESSION['isAdmin'] == false)
     {
