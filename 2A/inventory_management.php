@@ -73,7 +73,7 @@
     <body>
         <header>
             <nav>
-                <a href="admin_page.php" class="nav-button"><- Go Back</a>
+                <a href="wh_page.php" class="nav-button"><- Go Back</a>
             </nav>
         </header>
         <div style="margin-top: 30px;"></div>
