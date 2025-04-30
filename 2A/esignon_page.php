@@ -7,33 +7,38 @@ include "php_functions/database_functions.php";
 $pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $staffID = $_POST['staffID'] ?? '';
-    $password = $_POST['password'] ?? '';
 
-    if (!empty($staffID) && !empty($password)) {
-        $stmt = $pdo->prepare("SELECT staffID, staffPassword, isAdmin FROM staff WHERE staffID = :staffID");
-        $stmt->bindParam(':staffID', $staffID);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $staffID = isset($_POST['staffID']) ? trim($_POST['staffID']) : '';
+    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
 
-        if ($user && password_verify($password, $user['staffPassword'])) {
-            $_SESSION['staffID'] = $user['staffID'];   // Store staffID in session
-            $_SESSION['isAdmin'] = $user['isAdmin'];   // Store isAdmin in session
-            $_SESSION['logged_in'] = true;
-
-            // Redirect based on admin status
-            if ($user['isAdmin'] == 1) {
-                header("Location: admin_page.php?staffID=" . urlencode($user['staffID']));
-            } else {
-                header("Location: wh_page.php?staffID=" . urlencode($user['staffID']));
-            }
-            exit();
-        } else {
-            echo "<p style='color:red;'>Invalid staff ID or password.</p>";
-        }
-    } else {
-        echo "<p style='color:red;'>Both fields are required.</p>";
+    $sql = $pdo->prepare("SELECT * FROM Staff WHERE staffID = :staffID AND staffPassword = :password");
+    if (!$sql) {
+        die("Error preparing SQL query: " . implode(", ", $pdo->errorInfo()));
     }
+
+    $sql->bindParam(':staffID', $staffID, PDO::PARAM_INT);
+    $sql->bindParam(':password', $password, PDO::PARAM_STR);
+    $sql->execute();
+
+    $result = $sql->fetch(PDO::FETCH_ASSOC);
+
+    if ($result) {
+	    
+        session_regenerate_id(true);
+
+        $_SESSION['logged_in'] = true;
+        $_SESSION['staffID'] = $result['staffID'];
+        $_SESSION['isAdmin'] = $result['isAdmin'];
+
+        if ($result['isAdmin']) {
+            header("Location: admin_page.php?staffID=" . urlencode($result['staffID']));
+        } else {
+            header("Location: wh_page.php?staffID=" . urlencode($result['staffID']));
+        }
+        exit();
+    }
+
+    echo "<p style='color:red;'>Invalid staff ID or password.</p>";
 }
 ?>
 	
