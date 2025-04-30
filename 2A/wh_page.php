@@ -17,7 +17,7 @@ $pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
 
 // Get all open invoices
-$sql = "SELECT invoiceNO, userID, subtotal, shippingCost, grandTotal FROM InvoiceDB WHERE fulfillmentStatus = 'N';";
+$sql = "SELECT invoiceNO, userID, subtotal, shippingCost, grandTotal FROM InvoiceDB WHERE fulfillmentStatus = 'NULL';";
 $rs = getSQL($pdo, $sql);
 
 ?>
