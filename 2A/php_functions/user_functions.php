@@ -46,4 +46,18 @@ function setLogOnAttributeValue($database)
 
     echo "</a>";
 }
+
+//setLogOnAttributeValue() - same logic as previous, but for employees
+//Inputs -
+    //$database - the PDO object with a valid database connected, passed to another function
+//Output - Adds nav elements based on log-in status
+function setEmployeeLogOnAttributeValue($database)
+{
+    $statement = "SELECT staffFirstName FROM Staff WHERE staffID = " . $_SESSION['staffID'] . ";";
+    $rs = getSQL($database, $statement);
+    $name = extractSingleValue($rs);
+
+    echo "<a href=\"signout_page.php\">Log out</a>";
+    echo "<a href=\"\">" . $name . " (" . $_SESSION['staffID'] . ")</a>";
+}
 ?>

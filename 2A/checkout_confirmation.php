@@ -28,12 +28,12 @@
         <title> Checkout </title>
     </head>
     <body>
-        <?php setLogOnAttributeValue($database) ?>
         <h1>2A-CORP</h1>
         <nav>
 	        <a href="main_page.php">Home</a>
-	        <a href="esignon_page.php">Staff</a>
-	        <a href="cart.php">Cart</a>
+	        <?php setLogOnAttributeValue($database); ?>
+            <a href="esignon_page.php">Employee Login</a>
+            <a href="cart.php">Cart</a>
         </nav>
         <div style="margin-top: 30px;"></div>
         <div class="left">

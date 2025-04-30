@@ -40,6 +40,8 @@
     }
 ?>
 
+<!-- Start of HTML Block -->
+
 <html>
     <head>
         <meta charset="UTF-8">
@@ -51,7 +53,7 @@
     <body>
         <h1>2A-CORP</h1>
         <nav>
-            <a href="signout_page.php">Logout</a>
+            <?php setEmployeeLogOnAttributeValue($database); ?>
         </nav>
         <div style="margin-top: 30px;"></div>
             <div class="left">
