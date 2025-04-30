@@ -99,12 +99,10 @@
         <title> Cart </title>
     </head>
     <body>
-        <?php setLogOnAttributeValue($database) ?>
         <h1>2A-CORP</h1>
         <nav>
-	        <a href="main_page.php">Home</a>
-	        <a href="esignon_page.php">Staff</a>
-	        <a href="cart.php">Cart</a>
+	        <a href="main_page.php"><- Go Back</a>
+	        <?php setLogOnAttributeValue($database); ?>
         </nav>
         <div style="margin-top: 30px;"></div>
         <div class="left">

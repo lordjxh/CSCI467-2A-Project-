@@ -18,31 +18,32 @@ function assignUserID($database)
     return $userID;
 }
 
-//setLogOnAttributeValue() - should be used with the following HTML element on most pages:
-//  "<p><a href="" id="UserID" name="UserID" placeholder="Log In">*FUNCTION_CALL_HERE</a></p>"
-//and will add appropriate text to the element. Be sure to update CSS as well.
+//setLogOnAttributeValue() - called in <nav> and adds elements based on a user's log-in status, such as 
+//redirecting to the returning user page, or the log-in page
 //Inputs -
     //$database - the PDO object with a valid database connected, passed to another function
-//Output - Updates element value.
+//Output - Adds nav elements based on log-in status
 function setLogOnAttributeValue($database)
 {
-    echo "<p class=\"user-message\">";
-
     if($_SESSION['logged_in'] == true)
     {
         echo "<a href=\"ru_page.php\" id=\"UserID\" name=\"UserID\">";
+        
         $statement = "SELECT firstName FROM UserAccount WHERE userID = " . $_SESSION['userID'] . ";";
         $rs = getSQL($database, $statement);
         $name = extractSingleValue($rs);
 
-        echo "Welcome, " . $name . "!";
+        echo $name . " (Account)";
+        echo "</a>";
+        echo "<a href=\"signout_page.php\">Log out";
+        
     }
     else
     {
         echo "<a href=\"signon_page.php\" id=\"UserID\" name=\"UserID\">";
-        echo "Log On";
+        echo "Login/Sign Up";
     }
 
-    echo "</a></p>";
+    echo "</a>";
 }
 ?>

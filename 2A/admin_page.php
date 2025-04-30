@@ -21,8 +21,16 @@
     //if the user is not logged in as an admin, redirect to admin login
     if($_SESSION['isAdmin'] == false)
     {
-        header("Location: esignon_page.php");
-        exit();
+        if($_SESSION['logged_in'] == true) //if logged in, throw HTML error for unauthorized access
+        {
+            http_response_code(402);
+            die("ERROR: You are unauthorized to access this page. If this is in error, please inform a system admin.");
+        }
+        else //else proceed with redirect
+        {
+            header("Location: esignon_page.php");
+            exit();
+        }
     }
 
     //calls loadLegacyProducts() when called
@@ -41,12 +49,9 @@
         <title> Admin </title>
     </head>
     <body>
-        <?php setLogOnAttributeValue($database) ?>
         <h1>2A-CORP</h1>
         <nav>
-	        <a href="main_page.php">Home</a>
-	        <a href="esignon_page.php">Staff</a>
-	        <a href="cart.php">Cart</a>
+            <a href="signout_page.php">Logout</a>
         </nav>
         <div style="margin-top: 30px;"></div>
             <div class="left">
