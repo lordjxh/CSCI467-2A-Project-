@@ -22,13 +22,13 @@ function processInvoice($userID, $isAccount, $cartItems, $database)
 
     if($isAccount == false)
     {
-        $statement = "INSERT INTO InvoiceDB(subtotal, shippingCost, grandTotal, datePaid, authorizationNO, fulfillmentStatus, shippingFlag) VALUES(" . 
-            $subtotal . ", " . $shipping . ", " . $totalCost . ", '" . date("Y-m-d H:m:s") . "', " . $trans . ", 'N', 'N');";
+        $statement = "INSERT INTO InvoiceDB(subtotal, shippingCost, grandTotal, datePaid, authorizationNO) VALUES(" . 
+            $subtotal . ", " . $shipping . ", " . $totalCost . ", '" . date("Y-m-d H:m:s") . "', " . $trans . ");";
     }
     else
     {
-        $statement = "INSERT INTO InvoiceDB(userID, subtotal, shippingCost, grandTotal, datePaid, authorizationNO, fulfillmentStatus, shippingFlag) VALUES(" . 
-            $userID . ", " . $subtotal . ", " . $shipping . ", " . $totalCost . ", '" . date("Y-m-d H:m:s") . "', " . $trans . ", 'N', 'N');";
+        $statement = "INSERT INTO InvoiceDB(userID, subtotal, shippingCost, grandTotal, datePaid, authorizationNO) VALUES(" . 
+            $userID . ", " . $subtotal . ", " . $shipping . ", " . $totalCost . ", '" . date("Y-m-d H:m:s") . "', " . $trans . ");";
     }
 
     insertDatabaseValue($database, $statement);
