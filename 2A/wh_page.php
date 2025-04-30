@@ -17,7 +17,9 @@ $pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
 
 // Get all open invoices
-$sql = "SELECT invoiceNO, userID, subtotal, shippingCost, grandTotal FROM InvoiceDB WHERE fulfillmentStatus = 'NULL';";
+$sql = "SELECT invoiceNO, userID, subtotal, shippingCost, grandTotal, shippingFlag 
+        FROM InvoiceDB 
+        WHERE fulfillmentStatus IS NULL;";
 $rs = getSQL($pdo, $sql);
 
 ?>
@@ -103,9 +105,8 @@ $rs = getSQL($pdo, $sql);
 </head>
 <body>
     
-    <h1> Warehouse Fulillment </h1>        
+    <h1> Warehouse Fulfillment </h1>        
 
-<!-- Navigation Bar -->
     <nav>
         <a href="main_page.php">Home</a>
         <a href="inventory_management.php">Update Inventory</a>
@@ -115,37 +116,37 @@ $rs = getSQL($pdo, $sql);
     <h2>Open Orders</h2>
     <p>Welcome Back, <?php echo htmlspecialchars($_SESSION['username']); ?>! Select an invoice to create a shipping label.</p>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Invoice #</th>
-                <th>User ID</th>
-                <th>Subtotal</th>
-                <th>Shipping Cost</th>
-                <th>Grand Total</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // Display each unfulfilled invoice
-            while ($invoice = $rs->fetch(PDO::FETCH_ASSOC)) {
-                echo "<tr>";
-                echo "<td>" . htmlspecialchars($invoice['invoiceNO']) . "</td>";
-                echo "<td>" . htmlspecialchars($invoice['userID']) . "</td>";
-                echo "<td>$" . number_format($invoice['subtotal'], 2) . "</td>";
-                echo "<td>$" . number_format($invoice['shippingCost'], 2) . "</td>";
-                echo "<td>$" . number_format($invoice['grandTotal'], 2) . "</td>";
-                echo "<td>";
-                echo "<form action='create_shipping_label.php' method='post' style='margin:0;'>";
-                echo "<input type='hidden' name='invoiceNO' value='" . htmlspecialchars($invoice['invoiceNO']) . "'>";
-                echo "<button type='submit'>Create Label</button>";
-                echo "</form>";
-                echo "</td>";
-                echo "</tr>";
-            }
-            ?>
-        </tbody>
+    <form action="" method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Invoice #</th>
+                    <th>User ID</th>
+                    <th>Subtotal</th>
+                    <th>Shipping Cost</th>
+                    <th>Grand Total</th>
+                    <th>Shipping Flag</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                while ($invoice = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<tr>";
+                    echo "<td><input type='radio' name='invoiceNO' value='" . htmlspecialchars($invoice['invoiceNO']) . "' required></td>";
+                    echo "<td>" . htmlspecialchars($invoice['invoiceNO']) . "</td>";
+                    echo "<td>" . htmlspecialchars($invoice['userID']) . "</td>";
+                    echo "<td>$" . number_format($invoice['subtotal'], 2) . "</td>";
+                    echo "<td>$" . number_format($invoice['shippingCost'], 2) . "</td>";
+                    echo "<td>$" . number_format($invoice['grandTotal'], 2) . "</td>";
+                    echo "<td>" . htmlspecialchars($invoice['shippingFlag'] ?? '-') . "</td>";
+                    echo "</tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+        <button type="submit">Create Label for Selected Invoice</button>
+    </form>
 
 </body>
 </html>
