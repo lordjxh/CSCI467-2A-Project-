@@ -15,7 +15,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 // Connect to database
 $pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
-
 // Get all open invoices
 $sql = "SELECT invoiceNO, userID, subtotal, shippingCost, grandTotal, shippingFlag 
         FROM InvoiceDB 
