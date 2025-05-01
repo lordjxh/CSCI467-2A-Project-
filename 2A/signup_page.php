@@ -1,3 +1,9 @@
+<!-- 
+    Group 2A - CSCI 467 Spring 2025
+    signup_page.php - This page is created for users to create an account with 
+        the website if they do not have one already, if they do there is a link
+        that is provided for them to go back to the sign-in page
+-->
 <html>
     <head>
         <meta charset="UTF-8">
