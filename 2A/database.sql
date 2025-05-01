@@ -39,9 +39,9 @@ CREATE TABLE Staff (
 --PaymentData - an optional table for users that wish to store their payment info for faster checkout
 CREATE TABLE PaymentData (
     userID INT PRIMARY KEY,
-    cardNumber INT,
-    expiration INT,
-    cvv INT,
+    cardNumber VARCHAR(20),
+    expiration VARCHAR(5),
+    cvv VARCHAR(4),
     FOREIGN KEY (userID) REFERENCES UserAccount(userID)
 );
 
