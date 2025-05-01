@@ -1,3 +1,11 @@
+<!-- 
+    Group 2A - CSCI 467 Spring 2025
+    esignon_page.php - This page handles staff login authentication.
+        Warehouse employees and administrators enter their credentials.
+        Based on their role, they are redirected to either the admin or warehouse page.
+        Invalid credentials result in an inline error message.
+-->
+
 <?php
 session_start();
 
