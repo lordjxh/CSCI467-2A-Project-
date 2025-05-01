@@ -38,13 +38,19 @@ if (isset($_POST['check_invoice'])) {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // Interpret and display status or error message
-    if ($result) {
-        $statusMap = ['P' => 'Processing', 'S' => 'Shipped', 'C' => 'Completed', 'X' => 'Cancelled'];
-        $statusCode = strtoupper($result['fulfillmentStatus']);
-        $orderStatusMessage = $statusMap[$statusCode] ?? "Unknown status code: $statusCode";
+if ($result) {
+    $statusCode = strtoupper($result['fulfillmentStatus']);
+
+    if (is_null($statusCode)) {
+        $orderStatusMessage = "Processing";
     } else {
-        $orderStatusMessage = "Invoice not found.";
+        $statusMap = ['P' => 'Processing', 'S' => 'Shipped', 'C' => 'Completed', 'X' => 'Cancelled'];
+        $orderStatusMessage = $statusMap[$statusCode] ?? "Unknown status code: $statusCode";
     }
+} else {
+    $orderStatusMessage = "Invoice not found.";
+}
+
 }
 
 // Logic to update Personal Info
