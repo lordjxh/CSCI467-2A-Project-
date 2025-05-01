@@ -1,3 +1,8 @@
+<!-- 
+    Group 2A - CSCI 467 Spring 2025
+    signon_page.php - This page is created for users to log into their account if
+        they have one, else they are provided with a link to the sign up page
+-->
 <html lang="en">
     <head>
         <meta charset="UTF-8">
