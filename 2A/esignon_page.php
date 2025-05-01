@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <title>Warehouse Employee Login</title>
-    <link rel="icon" href="wrench.png" type="image/x-icon">
+    <link rel="icon" href="img/wrench.png" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
