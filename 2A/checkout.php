@@ -209,7 +209,7 @@
 
                                 foreach($valid['errors'] as $error)
                                 {
-                                    //echo "<p>" . $error . "</p>";
+                                    echo "<p>" . $error . "</p>";
                                     //echo "<p>Placeholder</p>";
                                 }
 
