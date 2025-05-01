@@ -1,8 +1,14 @@
+//Group 2A - CSCI467 Spring 2025
+//cart_script.js - a JS file used for the cart page, specifically for the checkout button.
+
+
+//Global variables
 var checkout_button = document.getElementById("checkout");
 var checkoutValid;
 
-checkoutValid = setCheckoutButton();
+checkoutValid = setCheckoutButton(); //calls setCheckoutButton() at script load
 
+//EventListener - used for checkout button, will add an href value if able to proceed with checkout
 checkout_button.addEventListener('click', () => {
     if(checkoutValid)
     {
@@ -10,6 +16,9 @@ checkout_button.addEventListener('click', () => {
     }
 });
 
+//setCheckoutButton() - handles enabling/disabling the checkout button based on a user's cart items
+//Inputs - none
+//Output - alters the checkout button element and enables/disables based on validity
 function setCheckoutButton()
 {
     let cartItemCount = document.getElementsByClassName("cart-item").length;

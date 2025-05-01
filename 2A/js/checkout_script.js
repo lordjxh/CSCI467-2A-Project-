@@ -1,4 +1,9 @@
-showTab(currentTab); // Display the current tab
+//Group 2A - CSCI467 Spring 2025
+//checkout_script.js - a JS file that handles data entry and tab navigation for the checkout page. Ensures that all fields are completed and contain valid inputs, then
+//changes the current entry tab. Sequences: shipping -> billing -> payment -> final confirmation.
+
+
+showTab(currentTab); // Display the current tab at script load
 
 
 //EventListener - for use with auto-formatting the input fields or validating specific fields
