@@ -113,7 +113,7 @@ $rs = getSQL($pdo, $sql);
     </nav>
 
     <h2>Open Orders</h2>
-    <p>Welcome Back, <?php echo htmlspecialchars($_SESSION['username']); ?>! Select an invoice to create a shipping label.</p>
+    <p>Welcome Back! Select an invoice to create a shipping label.</p>
 
     <form action="" method="post">
         <table>
