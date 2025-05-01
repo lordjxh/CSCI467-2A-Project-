@@ -99,7 +99,7 @@
         <title> Cart </title>
     </head>
     <body>
-        <h1>2A-CORP</h1>
+        <h1>Car Parts Store</h1>
         <nav>
 	        <a href="main_page.php"><- Go Back</a>
 	        <?php setLogOnAttributeValue($database); ?>

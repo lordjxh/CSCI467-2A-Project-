@@ -5,6 +5,10 @@ body {
     padding: 20px;
 }
 
+h1 {
+    text-align: center;
+}
+
 /* Navigation Bar */
 
 nav {
@@ -49,10 +53,6 @@ nav a:hover {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
-}
-
-h1 {
-    margin-bottom: 40px;
 }
 
 /* Table Elements */
