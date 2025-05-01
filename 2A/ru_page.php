@@ -1,3 +1,13 @@
+<!-- 
+    Group 2A - CSCI 467 Spring 2025
+    ru_page.php - This dashboard page is presented to returning users who are already logged in.
+        It provides functionalities to:
+        - Check the status of an order using an invoice number
+        - Update personal information (name, address, contact)
+        - Update payment information (card number, expiration, CVV)
+        Users are redirected to the sign-on page if not authenticated.
+-->
+
 <?php
 // Start a new or resume an existing session
 session_start();
