@@ -32,13 +32,19 @@ if (isset($_POST['check_invoice'])) {
     // Sanitize input
     $invoice = trim($_POST['invoice_number']);
     
-    // Query database for the order status
-    $stmt = $pdo->prepare("SELECT status FROM OrderStatus WHERE invoiceNumber = ?");
+    // Query InvoiceDB for the fulfillment status
+    $stmt = $pdo->prepare("SELECT fulfillmentStatus FROM InvoiceDB WHERE invoiceNO = ?");
     $stmt->execute([$invoice]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    // Display status or error message
-    $orderStatusMessage = $result ? $result['status'] : "Invoice not found.";
+    // Interpret and display status or error message
+    if ($result) {
+        $statusMap = ['P' => 'Processing', 'S' => 'Shipped', 'C' => 'Completed', 'X' => 'Cancelled'];
+        $statusCode = strtoupper($result['fulfillmentStatus']);
+        $orderStatusMessage = $statusMap[$statusCode] ?? "Unknown status code: $statusCode";
+    } else {
+        $orderStatusMessage = "Invoice not found.";
+    }
 }
 
 // Logic to update Personal Info
@@ -63,9 +69,9 @@ if (isset($_POST['update_info'])) {
 // Logic to Update Payment Info 
 if (isset($_POST['update_payment'])) {
     // Collect payment info from POST data
-    $cardNumber = $_POST['card_number'];
-    $expiration = $_POST['expiration'];
-    $cvv = $_POST['cvv'];
+    $cardNumber = (int)$_POST['card_number'];
+    $expiration = (int)$_POST['expiration']; // Format: YYYYMM
+    $cvv = (int)$_POST['cvv'];
 
     // Check if a payment record already exists for this user
     $check = $pdo->prepare("SELECT * FROM PaymentData WHERE userID = ?");
@@ -84,6 +90,7 @@ if (isset($_POST['update_payment'])) {
     // Set success message
     $paymentUpdateMessage = "Payment information updated successfully.";
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -163,13 +170,11 @@ if (isset($_POST['update_payment'])) {
             <h2>Check Order Status</h2>
             <form method="post">
                 <label>Invoice Number:</label><br>
-                <input type="text" name="invoice_number" required><br>
+                <input type="number" name="invoice_number" required><br>
                 <input type="submit" name="check_invoice" value="Check Status">
             </form>
 		
-		<!-- Display order status message if available -->
-		
-            <?php if ($orderStatusMessage): ?>
+            <?php if (!empty($orderStatusMessage)): ?>
                 <p><strong>Status:</strong> <?= htmlspecialchars($orderStatusMessage) ?></p>
             <?php endif; ?>
         </div>
@@ -177,8 +182,7 @@ if (isset($_POST['update_payment'])) {
 
     <div class="right">
 
-        <!-- For updating personal information -->
-	    
+        <!-- Update Personal Information -->
         <div class="section">
             <h2>Update Personal Information</h2>
             <form method="post">
@@ -191,48 +195,43 @@ if (isset($_POST['update_payment'])) {
                 <label>Shipping Address:</label><br>
                 <input type="text" name="address" required><br>
 
-                <label>State:</label><br>
-                <input type="text" name="state" maxlength="2" required><br>
+                <label>State (2-letter):</label><br>
+                <input type="text" name="state" maxlength="2" pattern="[A-Za-z]{2}" title="Two-letter state abbreviation" required><br>
 
                 <label>Zipcode:</label><br>
-                <input type="number" name="zipcode" required><br>
+                <input type="text" name="zipcode" pattern="\d{5}" maxlength="5" required><br>
 
                 <label>Phone:</label><br>
-                <input type="number" name="phone" required><br>
+                <input type="tel" name="phone" pattern="\d{10}" maxlength="10" title="10-digit phone number" required><br>
 
                 <label>Email:</label><br>
                 <input type="email" name="email" required><br>
 
                 <input type="submit" name="update_info" value="Update Info">
             </form>
-		
-            <!-- Display info update message if available -->
 
-            <?php if ($infoUpdateMessage): ?>
+            <?php if (!empty($infoUpdateMessage)): ?>
                 <p><strong><?= htmlspecialchars($infoUpdateMessage) ?></strong></p>
             <?php endif; ?>
         </div>
 
-        <!-- Updating payment information -->
-	    
+        <!-- Update Payment Information -->
         <div class="section">
             <h2>Update Payment Information</h2>
             <form method="post">
                 <label>Card Number:</label><br>
-                <input type="text" name="card_number" required><br>
+                <input type="text" name="card_number" pattern="\d{13,16}" maxlength="16" title="13 to 16-digit card number" required><br>
 
                 <label>Expiration (MMYY):</label><br>
-                <input type="text" name="expiration" required><br>
+                <input type="text" name="expiration" pattern="\d{4}" maxlength="4" title="Enter as MMYY" required><br>
 
                 <label>CVV:</label><br>
-                <input type="text" name="cvv" required><br>
+                <input type="text" name="cvv" pattern="\d{3,4}" maxlength="4" title="3 or 4-digit CVV" required><br>
 
                 <input type="submit" name="update_payment" value="Update Payment">
             </form>
-		
-            <!-- Display payment update message if available -->
-		
-            <?php if ($paymentUpdateMessage): ?>
+
+            <?php if (!empty($paymentUpdateMessage)): ?>
                 <p><strong><?= htmlspecialchars($paymentUpdateMessage) ?></strong></p>
             <?php endif; ?>
         </div>
@@ -240,6 +239,7 @@ if (isset($_POST['update_payment'])) {
     </div>
 
 </div>
+
 
 </body>
 </html>
