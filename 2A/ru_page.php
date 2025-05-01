@@ -75,7 +75,7 @@ if (isset($_POST['update_info'])) {
 // Logic to Update Payment Info 
 if (isset($_POST['update_payment'])) {
     $cardNumber = $_POST['card_number'];
-    $expiration = $_POST['expiration']; // Format: MMYY
+    $expiration = (int) preg_replace('/\D/', '', $_POST['expiration']); // Format: MMYY
     $cvv = $_POST['cvv'];
 
     $check = $pdo->prepare("SELECT * FROM PaymentData WHERE userID = ?");
