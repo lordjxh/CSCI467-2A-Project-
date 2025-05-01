@@ -14,8 +14,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 // Connect to database
 $pdo = establishDB($databaseHost, $databaseUsername, $databasePassword);
 
-// Retrieve userID either from GET parameters, session, or set as null if missing
-$userID = $_GET['userID'] ?? $_SESSION['userID'] ?? null;
+// Retrieve userID from session, or set as null if missing
+$userID = $_SESSION['userID'] ?? null;
 
 // For status messages
 $orderStatusMessage = "";
@@ -74,26 +74,21 @@ if (isset($_POST['update_info'])) {
 
 // Logic to Update Payment Info 
 if (isset($_POST['update_payment'])) {
-    // Collect payment info from POST data
-    $cardNumber = (int)$_POST['card_number'];
-    $expiration = (int)$_POST['expiration']; // Format: YYYYMM
-    $cvv = (int)$_POST['cvv'];
+    $cardNumber = $_POST['card_number'];
+    $expiration = $_POST['expiration']; // Format: MMYY
+    $cvv = $_POST['cvv'];
 
-    // Check if a payment record already exists for this user
     $check = $pdo->prepare("SELECT * FROM PaymentData WHERE userID = ?");
     $check->execute([$userID]);
 
-    // Prepare either an UPDATE or INSERT statement
     if ($check->rowCount() > 0) {
         $stmt = $pdo->prepare("UPDATE PaymentData SET cardNumber=?, expiration=?, cvv=? WHERE userID=?");
     } else {
         $stmt = $pdo->prepare("INSERT INTO PaymentData (cardNumber, expiration, cvv, userID) VALUES (?, ?, ?, ?)");
     }
 
-    // Execute the appropriate statement
     $stmt->execute([$cardNumber, $expiration, $cvv, $userID]);
-    
-    // Set success message
+
     $paymentUpdateMessage = "Payment information updated successfully.";
 }
 
