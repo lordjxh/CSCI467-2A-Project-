@@ -83,14 +83,15 @@ if (isset($_POST['update_payment'])) {
 
     if ($check->rowCount() > 0) {
         $stmt = $pdo->prepare("UPDATE PaymentData SET cardNumber=?, expiration=?, cvv=? WHERE userID=?");
+        $stmt->execute([$cardNumber, $expiration, $cvv, $userID]);
     } else {
         $stmt = $pdo->prepare("INSERT INTO PaymentData (cardNumber, expiration, cvv, userID) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$cardNumber, $expiration, $cvv, $userID]);
     }
-
-    $stmt->execute([$cardNumber, $expiration, $cvv, $userID]);
 
     $paymentUpdateMessage = "Payment information updated successfully.";
 }
+
 
 ?>
 
