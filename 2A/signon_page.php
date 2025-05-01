@@ -10,6 +10,7 @@
             <nav>
                 <a href="main_page.php">Home</a>
                 <a href="esignon_page.php">Employee Login</a>
+                <a href="cart.php">Cart</a>
             </nav>
         </header>
         <main>
