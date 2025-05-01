@@ -1,3 +1,10 @@
+<!-- 
+    Group 2A - CSCI 467 Spring 2025
+    main_page.php - This page was created for users to view the parts catalog
+        and add the items that they need to their cart. This works for guest
+        users and logged-in users. Data for the parts comes from the legacyDB
+        and the available quantity is selected from the Products table
+-->
 <?php
     session_start();
 
