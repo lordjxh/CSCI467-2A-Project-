@@ -98,7 +98,7 @@ if (isset($_POST['update_payment'])) {
 <html>
 <head>
     <title>Returning User</title>
-    <link rel="icon" href="wrench.png" type="image/x-icon">
+    <link rel="icon" href="img/wrench.png" type="image/x-icon">
     <style>
         /* Basic page styling */ 
         body {
