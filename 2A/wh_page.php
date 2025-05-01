@@ -1,3 +1,11 @@
+<!-- 
+    Group 2A - CSCI 467 Spring 2025
+    wh_page.php - This page serves as the warehouse fulfillment portal for logged-in staff.
+        It displays all open orders (invoices with no fulfillment status).
+        Staff can select an invoice to mark it as ready for shipping by setting a shipping flag.
+        If a user is not logged in, they are redirected to the staff sign-on page.
+-->
+
 <?php
 session_start();
 
