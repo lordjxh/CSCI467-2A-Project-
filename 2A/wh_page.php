@@ -36,7 +36,7 @@ $rs = getSQL($pdo, $sql);
 <head>
     <meta charset="UTF-8">
     <title>Warehouse Portal</title>
-    <link rel="icon" href="wrench.png" type="image/x-icon">
+    <link rel="icon" href="img/wrench.png" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
